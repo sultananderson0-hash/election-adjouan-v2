@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Élection du Président des Jeunes d'Adjouan 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar public-topbar">
+  <div class="brand">
+    <span class="brand-mark">PJ</span>
+    <div><strong>Président des Jeunes</strong><small>Adjouan 2026</small></div>
+  </div>
+  <a class="btn btn-light" href="#infos">Informations</a>
+</header>
+
+<main>
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">ÉLECTION 2026</p>
+      <h1>Élection du Président des Jeunes d'Adjouan</h1>
+      <p class="hero-text">Participez à une élection transparente, simple et accessible à tous les jeunes éligibles.</p>
+      <button id="voteStartBtn" class="btn btn-primary btn-large">Je veux voter →</button>
+      <p id="closedMessage" class="notice notice-warning hidden">🔒 Les inscriptions et les votes sont fermés depuis le 11 octobre 2026 à 18:00.</p>
+    </div>
+  </section>
+
+  <section id="infos" class="container info-section">
+    <div class="section-heading centered">
+      <div>
+        <p class="eyebrow">QUI PEUT VOTER ?</p>
+        <h2>Conditions et pièces acceptées</h2>
+      </div>
+    </div>
+    <div class="info-grid">
+      <article class="info-card"><div class="icon">🪪</div><h3>Carte d'identité</h3><p>Une pièce d'identité valide peut être utilisée pour l'inscription.</p></article>
+      <article class="info-card"><div class="icon">📄</div><h3>Acte de naissance</h3><p>L'acte de naissance est également accepté pour l'inscription.</p></article>
+      <article class="info-card"><div class="icon">🎓</div><h3>Carte d'identité scolaire</h3><p>Les élèves peuvent utiliser leur carte d'identité scolaire.</p></article>
+      <article class="info-card"><div class="icon">15–40</div><h3>Âge requis</h3><p>Il faut avoir entre <strong>15 et 40 ans</strong> pour être électeur.</p></article>
+    </div>
+    <div class="one-vote"><strong>1 vote = 1 électeur</strong><span>Chaque électeur ne peut voter qu'une seule fois.</span></div>
+  </section>
+
+  <section id="registration" class="container workflow hidden">
+    <div class="step-title"><span>1</span><div><p class="eyebrow">INSCRIPTION</p><h2>Enregistrez-vous pour voter</h2></div></div>
+    <form id="registrationForm" class="card form-card">
+      <div class="form-grid">
+        <label>Nom
+          <input id="voterLastName" required maxlength="50">
+        </label>
+        <label>Prénom
+          <input id="voterFirstName" required maxlength="50">
+        </label>
+      </div>
+      <div class="form-grid">
+        <label>Date de naissance
+          <input id="birthDate" type="date" required>
+        </label>
+        <label>Type de document
+          <select id="documentType" required>
+            <option value="">Choisir...</option>
+            <option>Carte d'identité</option>
+            <option>Acte de naissance</option>
+            <option>Carte d'identité scolaire</option>
+          </select>
+        </label>
+      </div>
+      <label>Numéro de la pièce (si disponible)
+        <input id="documentNumber" maxlength="80" placeholder="Numéro du document">
+      </label>
+      <label>Joindre la pièce justificative
+        <input id="documentFile" type="file" accept="image/*,.pdf" required>
+      </label>
+      <p class="muted small">Votre document sert à l'inscription. Dans une version en production, la vérification doit être effectuée par un système sécurisé côté serveur.</p>
+      <button class="btn btn-primary btn-large" type="submit">Valider mon inscription →</button>
+      <p id="registrationError" class="error"></p>
+    </form>
+  </section>
+
+  <section id="candidates" class="container workflow hidden">
+    <div class="step-title"><span>2</span><div><p class="eyebrow">CHOIX DU CANDIDAT</p><h2>Les candidats</h2><p class="muted">Lisez les informations avant de faire votre choix.</p></div></div>
+    <div id="publicCandidates" class="candidate-grid"></div>
+  </section>
+
+  <section id="confirmation" class="container workflow hidden">
+    <div class="success-box">
+      <div class="success-icon">✓</div>
+      <h2>Vote enregistré</h2>
+      <p id="confirmationText"></p>
+      <p class="muted">Votre vote a été enregistré. Vous ne pouvez plus voter une deuxième fois avec cette inscription.</p>
+      <button class="btn btn-outline" onclick="location.reload()">Retour à l'accueil</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span>© 2026 Élection du Président des Jeunes d'Adjouan</span>
+    <a href="admin.html">Administration</a>
+  </div>
+</footer>
+
+<script>
+const CUTOFF = new Date("2026-10-11T18:00:00");
+const $ = id => document.getElementById(id);
+let currentVoter = null;
+
+function isClosed() { return new Date() >= CUTOFF; }
+function getCandidates() { return JSON.parse(localStorage.getItem("candidates") || "[]"); }
+function getVoters() { return JSON.parse(localStorage.getItem("voters") || "[]"); }
+function saveVoters(v) { localStorage.setItem("voters", JSON.stringify(v)); }
+function getVotes() { return JSON.parse(localStorage.getItem("votes") || "{}"); }
+function saveVotes(v) { localStorage.setItem("votes", JSON.stringify(v)); }
+
+function ageFromDate(dateString) {
+  const birth = new Date(dateString + "T00:00:00");
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  return age;
+}
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+}
+function show(id) { $(id).classList.remove("hidden"); }
+function hide(id) { $(id).classList.add("hidden"); }
+
+function updateStatus() {
+  if (isClosed()) {
+    $("voteStartBtn").disabled = true;
+    $("closedMessage").classList.remove("hidden");
+  }
+}
+updateStatus();
+
+$("voteStartBtn").addEventListener("click", () => {
+  if (isClosed()) return;
+  show("registration");
+  $("registration").scrollIntoView({behavior:"smooth"});
+});
+
+$("registrationForm").addEventListener("submit", e => {
+  e.preventDefault();
+  if (isClosed()) return alert("Le scrutin est clôturé.");
+
+  const birthDate = $("birthDate").value;
+  const age = ageFromDate(birthDate);
+  if (age < 15 || age > 40) {
+    $("registrationError").textContent = "Vous devez avoir entre 15 et 40 ans.";
+    return;
+  }
+
+  const file = $("documentFile").files[0];
+  if (!file) {
+    $("registrationError").textContent = "Veuillez joindre une pièce justificative.";
+    return;
+  }
+
+  const voters = getVoters();
+  const documentNumber = $("documentNumber").value.trim();
+  if (documentNumber && voters.some(v => v.documentNumber === documentNumber)) {
+    $("registrationError").textContent = "Cette pièce semble déjà utilisée pour une inscription.";
+    return;
+  }
+
+  currentVoter = {
+    id: crypto.randomUUID(),
+    firstName: $("voterFirstName").value.trim(),
+    lastName: $("voterLastName").value.trim(),
+    birthDate,
+    age,
+    documentType: $("documentType").value,
+    documentNumber,
+    registeredAt: new Date().toISOString(),
+    hasVoted: false
+  };
+
+  voters.push(currentVoter);
+  saveVoters(voters);
+  showCandidates();
+});
+
+function showCandidates() {
+  const candidates = getCandidates();
+  hide("registration");
+  show("candidates");
+  $("candidates").scrollIntoView({behavior:"smooth"});
+
+  $("publicCandidates").innerHTML = candidates.length ? candidates.map(c => `
+    <article class="candidate-card">
+      <img src="${c.photo || 'https://via.placeholder.com/500x500?text=Photo'}" alt="Photo de ${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}">
+      <div class="candidate-body">
+        <p class="candidate-label">CANDIDAT</p>
+        <h3>${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}</h3>
+        <p><strong>Profession :</strong> ${escapeHtml(c.profession)}</p>
+        <div class="motivation"><strong>Message de motivation</strong><p>${escapeHtml(c.motivation)}</p></div>
+        <button class="btn btn-primary btn-full" onclick="vote('${c.id}')">Je vote</button>
+      </div>
+    </article>
+  `).join("") : `
+    <div class="empty card">Aucun candidat n'a encore été ajouté par l'administration.</div>
+  `;
+}
+
+window.vote = function(candidateId) {
+  if (isClosed()) return alert("Le scrutin est clôturé.");
+  if (!currentVoter) return alert("Veuillez d'abord vous inscrire.");
+  if (currentVoter.hasVoted) return alert("Vous avez déjà voté.");
+
+  const candidates = getCandidates();
+  const candidate = candidates.find(c => c.id === candidateId);
+  if (!candidate) return alert("Candidat introuvable.");
+
+  if (!confirm(`Confirmer votre vote pour ${candidate.firstName} ${candidate.lastName} ?`)) return;
+
+  const votes = getVotes();
+  votes[candidateId] = Number(votes[candidateId] || 0) + 1;
+  saveVotes(votes);
+
+  const voters = getVoters();
+  const index = voters.findIndex(v => v.id === currentVoter.id);
+  if (index >= 0) {
+    voters[index].hasVoted = true;
+    saveVoters(voters);
+  }
+
+  currentVoter.hasVoted = true;
+  hide("candidates");
+  show("confirmation");
+  $("confirmationText").innerHTML = `Merci <strong>${escapeHtml(currentVoter.firstName)}</strong>. Votre vote pour <strong>${escapeHtml(candidate.firstName)} ${escapeHtml(candidate.lastName)}</strong> a bien été enregistré.`;
+  $("confirmation").scrollIntoView({behavior:"smooth"});
+};
+</script>
+</body>
+</html>
