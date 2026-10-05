@@ -3,235 +3,1294 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Élection du Président des Jeunes d'Adjouan 2026</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
+
 <header class="topbar public-topbar">
   <div class="brand">
     <span class="brand-mark">PJ</span>
-    <div><strong>Président des Jeunes</strong><small>Adjouan 2026</small></div>
+    <div>
+      <strong>Président des Jeunes</strong>
+      <small>Adjouan 2026</small>
+    </div>
   </div>
+
   <a class="btn btn-light" href="#infos">Informations</a>
 </header>
 
 <main>
+
+  <!-- ACCUEIL -->
   <section id="home" class="hero">
+
     <div class="hero-content">
+
       <p class="eyebrow">ÉLECTION 2026</p>
-      <h1>Élection du Président des Jeunes d'Adjouan</h1>
-      <p class="hero-text">Participez à une élection transparente, simple et accessible à tous les jeunes éligibles.</p>
-      <button id="voteStartBtn" class="btn btn-primary btn-large">Je veux voter →</button>
-      <p id="closedMessage" class="notice notice-warning hidden">🔒 Les inscriptions et les votes sont fermés depuis le 11 octobre 2026 à 18:00.</p>
+
+      <h1>
+        Élection du Président des Jeunes d'Adjouan
+      </h1>
+
+      <p class="hero-text">
+        Participez à une élection transparente,
+        simple et accessible à tous les jeunes éligibles.
+      </p>
+
+      <button
+        id="voteStartBtn"
+        class="btn btn-primary btn-large"
+        disabled
+      >
+        Chargement...
+      </button>
+
+      <p
+        id="statusMessage"
+        class="notice notice-warning"
+      >
+        Vérification du statut du scrutin...
+      </p>
+
     </div>
+
   </section>
 
+
+  <!-- INFORMATIONS -->
   <section id="infos" class="container info-section">
+
     <div class="section-heading centered">
+
       <div>
+
         <p class="eyebrow">QUI PEUT VOTER ?</p>
-        <h2>Conditions et pièces acceptées</h2>
+
+        <h2>
+          Conditions et pièces acceptées
+        </h2>
+
       </div>
+
     </div>
+
+
     <div class="info-grid">
-      <article class="info-card"><div class="icon">🪪</div><h3>Carte d'identité</h3><p>Une pièce d'identité valide peut être utilisée pour l'inscription.</p></article>
-      <article class="info-card"><div class="icon">📄</div><h3>Acte de naissance</h3><p>L'acte de naissance est également accepté pour l'inscription.</p></article>
-      <article class="info-card"><div class="icon">🎓</div><h3>Carte d'identité scolaire</h3><p>Les élèves peuvent utiliser leur carte d'identité scolaire.</p></article>
-      <article class="info-card"><div class="icon">15–40</div><h3>Âge requis</h3><p>Il faut avoir entre <strong>15 et 40 ans</strong> pour être électeur.</p></article>
+
+      <article class="info-card">
+
+        <div class="icon">🪪</div>
+
+        <h3>
+          Carte d'identité
+        </h3>
+
+        <p>
+          Une pièce d'identité valide peut être utilisée
+          pour l'inscription.
+        </p>
+
+      </article>
+
+
+      <article class="info-card">
+
+        <div class="icon">📄</div>
+
+        <h3>
+          Acte de naissance
+        </h3>
+
+        <p>
+          L'acte de naissance est également accepté
+          pour l'inscription.
+        </p>
+
+      </article>
+
+
+      <article class="info-card">
+
+        <div class="icon">🎓</div>
+
+        <h3>
+          Carte d'identité scolaire
+        </h3>
+
+        <p>
+          Les élèves peuvent utiliser leur carte
+          d'identité scolaire.
+        </p>
+
+      </article>
+
+
+      <article class="info-card">
+
+        <div class="icon">15–40</div>
+
+        <h3>
+          Âge requis
+        </h3>
+
+        <p>
+          Il faut avoir entre
+          <strong>15 et 40 ans</strong>
+          pour être électeur.
+        </p>
+
+      </article>
+
     </div>
-    <div class="one-vote"><strong>1 vote = 1 électeur</strong><span>Chaque électeur ne peut voter qu'une seule fois.</span></div>
+
+
+    <div class="one-vote">
+
+      <strong>
+        1 vote = 1 électeur
+      </strong>
+
+      <span>
+        Chaque électeur ne peut voter qu'une seule fois.
+      </span>
+
+    </div>
+
   </section>
 
-  <section id="registration" class="container workflow hidden">
-    <div class="step-title"><span>1</span><div><p class="eyebrow">INSCRIPTION</p><h2>Enregistrez-vous pour voter</h2></div></div>
-    <form id="registrationForm" class="card form-card">
-      <div class="form-grid">
-        <label>Nom
-          <input id="voterLastName" required maxlength="50">
-        </label>
-        <label>Prénom
-          <input id="voterFirstName" required maxlength="50">
-        </label>
+
+  <!-- INSCRIPTION -->
+  <section
+    id="registration"
+    class="container workflow hidden"
+  >
+
+    <div class="step-title">
+
+      <span>1</span>
+
+      <div>
+
+        <p class="eyebrow">
+          INSCRIPTION
+        </p>
+
+        <h2>
+          Enregistrez-vous pour voter
+        </h2>
+
       </div>
+
+    </div>
+
+
+    <form
+      id="registrationForm"
+      class="card form-card"
+    >
+
       <div class="form-grid">
-        <label>Date de naissance
-          <input id="birthDate" type="date" required>
+
+        <label>
+          Nom
+
+          <input
+            id="voterLastName"
+            type="text"
+            required
+            maxlength="50"
+          >
+
         </label>
-        <label>Type de document
-          <select id="documentType" required>
-            <option value="">Choisir...</option>
-            <option>Carte d'identité</option>
-            <option>Acte de naissance</option>
-            <option>Carte d'identité scolaire</option>
+
+
+        <label>
+          Prénom
+
+          <input
+            id="voterFirstName"
+            type="text"
+            required
+            maxlength="50"
+          >
+
+        </label>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <label>
+          Date de naissance
+
+          <input
+            id="birthDate"
+            type="date"
+            required
+          >
+
+        </label>
+
+
+        <label>
+          Type de document
+
+          <select
+            id="documentType"
+            required
+          >
+
+            <option value="">
+              Choisir...
+            </option>
+
+            <option value="Carte d'identité">
+              Carte d'identité
+            </option>
+
+            <option value="Acte de naissance">
+              Acte de naissance
+            </option>
+
+            <option value="Carte d'identité scolaire">
+              Carte d'identité scolaire
+            </option>
+
           </select>
+
         </label>
+
       </div>
-      <label>Numéro de la pièce (si disponible)
-        <input id="documentNumber" maxlength="80" placeholder="Numéro du document">
+
+
+      <label>
+
+        Numéro de la pièce
+        (si disponible)
+
+        <input
+          id="documentNumber"
+          type="text"
+          maxlength="80"
+          placeholder="Numéro du document"
+        >
+
       </label>
-      <label>Joindre la pièce justificative
-        <input id="documentFile" type="file" accept="image/*,.pdf" required>
+
+
+      <label>
+
+        Joindre la pièce justificative
+
+        <input
+          id="documentFile"
+          type="file"
+          accept="image/*,.pdf"
+          required
+        >
+
       </label>
-      <p class="muted small">Votre document sert à l'inscription. Dans une version en production, la vérification doit être effectuée par un système sécurisé côté serveur.</p>
-      <button class="btn btn-primary btn-large" type="submit">Valider mon inscription →</button>
-      <p id="registrationError" class="error"></p>
+
+
+      <p class="muted small">
+
+        Votre document sera enregistré de manière
+        privée dans le système afin de permettre
+        la vérification de votre inscription.
+
+      </p>
+
+
+      <button
+        class="btn btn-primary btn-large"
+        type="submit"
+        id="registrationButton"
+      >
+
+        Valider mon inscription →
+
+      </button>
+
+
+      <p
+        id="registrationError"
+        class="error"
+      ></p>
+
     </form>
+
   </section>
 
-  <section id="candidates" class="container workflow hidden">
-    <div class="step-title"><span>2</span><div><p class="eyebrow">CHOIX DU CANDIDAT</p><h2>Les candidats</h2><p class="muted">Lisez les informations avant de faire votre choix.</p></div></div>
-    <div id="publicCandidates" class="candidate-grid"></div>
-  </section>
 
-  <section id="confirmation" class="container workflow hidden">
-    <div class="success-box">
-      <div class="success-icon">✓</div>
-      <h2>Vote enregistré</h2>
-      <p id="confirmationText"></p>
-      <p class="muted">Votre vote a été enregistré. Vous ne pouvez plus voter une deuxième fois avec cette inscription.</p>
-      <button class="btn btn-outline" onclick="location.reload()">Retour à l'accueil</button>
+  <!-- CANDIDATS -->
+  <section
+    id="candidates"
+    class="container workflow hidden"
+  >
+
+    <div class="step-title">
+
+      <span>2</span>
+
+      <div>
+
+        <p class="eyebrow">
+          CHOIX DU CANDIDAT
+        </p>
+
+        <h2>
+          Les candidats
+        </h2>
+
+        <p class="muted">
+          Lisez les informations avant de faire votre choix.
+        </p>
+
+      </div>
+
     </div>
+
+
+    <div
+      id="publicCandidates"
+      class="candidate-grid"
+    ></div>
+
   </section>
+
+
+  <!-- CONFIRMATION -->
+  <section
+    id="confirmation"
+    class="container workflow hidden"
+  >
+
+    <div class="success-box">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <h2>
+        Vote enregistré
+      </h2>
+
+      <p id="confirmationText"></p>
+
+      <p class="muted">
+
+        Votre vote a été enregistré.
+        Vous ne pouvez plus voter une deuxième fois
+        avec cette inscription.
+
+      </p>
+
+      <button
+        class="btn btn-outline"
+        onclick="location.reload()"
+      >
+
+        Retour à l'accueil
+
+      </button>
+
+    </div>
+
+  </section>
+
 </main>
 
+
 <footer>
+
   <div class="container footer-inner">
-    <span>© 2026 Élection du Président des Jeunes d'Adjouan</span>
-    <a href="admin.html">Administration</a>
+
+    <span>
+      © 2026 Élection du Président des Jeunes d'Adjouan
+    </span>
+
+    <a href="admin.html">
+      Administration
+    </a>
+
   </div>
+
 </footer>
 
-<script>
-const CUTOFF = new Date("2026-10-11T18:00:00");
-const $ = id => document.getElementById(id);
-let currentVoter = null;
 
-function isClosed() { return new Date() >= CUTOFF; }
-function getCandidates() { return JSON.parse(localStorage.getItem("candidates") || "[]"); }
-function getVoters() { return JSON.parse(localStorage.getItem("voters") || "[]"); }
-function saveVoters(v) { localStorage.setItem("voters", JSON.stringify(v)); }
-function getVotes() { return JSON.parse(localStorage.getItem("votes") || "{}"); }
-function saveVotes(v) { localStorage.setItem("votes", JSON.stringify(v)); }
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+  "https://qktfqpsqmcrgtmauntfj.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrdGZxcHNxbWNyZ3RtYXVudGZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NzU1MDEsImV4cCI6MjEwNjU1MTUwMX0.sugP-f143yDuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+const $ = id => document.getElementById(id);
+
+let currentVoter = null;
+let electionConfig = null;
+
+
+/* =====================================================
+   OUTILS
+===================================================== */
+
+function show(id) {
+
+  $(id).classList.remove("hidden");
+
+}
+
+
+function hide(id) {
+
+  $(id).classList.add("hidden");
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replace(
+      /[&<>"']/g,
+      character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[character])
+    );
+
+}
+
+
+/* =====================================================
+   CALCUL DE L'ÂGE
+===================================================== */
 
 function ageFromDate(dateString) {
-  const birth = new Date(dateString + "T00:00:00");
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+
+  const birth =
+    new Date(dateString + "T00:00:00");
+
+  const today =
+    new Date();
+
+  let age =
+    today.getFullYear() -
+    birth.getFullYear();
+
+  const month =
+    today.getMonth() -
+    birth.getMonth();
+
+  if (
+    month < 0 ||
+    (
+      month === 0 &&
+      today.getDate() < birth.getDate()
+    )
+  ) {
+
+    age--;
+
+  }
+
   return age;
-}
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-}
-function show(id) { $(id).classList.remove("hidden"); }
-function hide(id) { $(id).classList.add("hidden"); }
 
-function updateStatus() {
-  if (isClosed()) {
+}
+
+
+/* =====================================================
+   CHARGEMENT DU SCRUTIN
+===================================================== */
+
+async function loadElectionConfig() {
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("election_config")
+    .select("id,date_debut,date_fin")
+    .order("id", {
+      ascending: true
+    })
+    .limit(1)
+    .maybeSingle();
+
+
+  if (error) {
+
+    console.error(error);
+
     $("voteStartBtn").disabled = true;
-    $("closedMessage").classList.remove("hidden");
+
+    $("voteStartBtn").textContent =
+      "Erreur de connexion";
+
+    $("statusMessage").textContent =
+      "Impossible de vérifier le statut du scrutin.";
+
+    return;
+
   }
+
+
+  if (!data) {
+
+    $("voteStartBtn").disabled = true;
+
+    $("voteStartBtn").textContent =
+      "Scrutin non configuré";
+
+    $("statusMessage").textContent =
+      "Les dates du scrutin n'ont pas encore été configurées.";
+
+    return;
+
+  }
+
+
+  electionConfig = data;
+
+  updateElectionStatus();
+
 }
-updateStatus();
 
-$("voteStartBtn").addEventListener("click", () => {
-  if (isClosed()) return;
-  show("registration");
-  $("registration").scrollIntoView({behavior:"smooth"});
-});
 
-$("registrationForm").addEventListener("submit", e => {
-  e.preventDefault();
-  if (isClosed()) return alert("Le scrutin est clôturé.");
+/* =====================================================
+   STATUT DU SCRUTIN
+===================================================== */
 
-  const birthDate = $("birthDate").value;
-  const age = ageFromDate(birthDate);
-  if (age < 15 || age > 40) {
-    $("registrationError").textContent = "Vous devez avoir entre 15 et 40 ans.";
+function updateElectionStatus() {
+
+  if (!electionConfig) return;
+
+
+  const now =
+    new Date();
+
+  const start =
+    new Date(electionConfig.date_debut);
+
+  const end =
+    new Date(electionConfig.date_fin);
+
+
+  /* AVANT L'OUVERTURE */
+
+  if (now < start) {
+
+    $("voteStartBtn").disabled = true;
+
+    $("voteStartBtn").textContent =
+      "Le scrutin n'est pas encore ouvert";
+
+    $("statusMessage").textContent =
+      "Le vote commencera le " +
+      start.toLocaleString("fr-FR");
+
     return;
+
   }
 
-  const file = $("documentFile").files[0];
-  if (!file) {
-    $("registrationError").textContent = "Veuillez joindre une pièce justificative.";
+
+  /* APRÈS LA FERMETURE */
+
+  if (now >= end) {
+
+    $("voteStartBtn").disabled = true;
+
+    $("voteStartBtn").textContent =
+      "Scrutin clôturé";
+
+    $("statusMessage").textContent =
+      "Les inscriptions et les votes sont fermés depuis le " +
+      end.toLocaleString("fr-FR");
+
     return;
+
   }
 
-  const voters = getVoters();
-  const documentNumber = $("documentNumber").value.trim();
-  if (documentNumber && voters.some(v => v.documentNumber === documentNumber)) {
-    $("registrationError").textContent = "Cette pièce semble déjà utilisée pour une inscription.";
+
+  /* SCRUTIN OUVERT */
+
+  $("voteStartBtn").disabled = false;
+
+  $("voteStartBtn").textContent =
+    "Je veux voter →";
+
+  $("statusMessage").textContent =
+    "Le scrutin est actuellement ouvert.";
+
+}
+
+
+/* =====================================================
+   VÉRIFICATION DU SCRUTIN
+===================================================== */
+
+function isElectionOpen() {
+
+  if (!electionConfig)
+    return false;
+
+  const now =
+    new Date();
+
+  const start =
+    new Date(electionConfig.date_debut);
+
+  const end =
+    new Date(electionConfig.date_fin);
+
+  return now >= start && now < end;
+
+}
+
+
+/* =====================================================
+   BOUTON JE VEUX VOTER
+===================================================== */
+
+$("voteStartBtn")
+  .addEventListener(
+    "click",
+    () => {
+
+      if (!isElectionOpen()) {
+
+        alert(
+          "Le scrutin n'est pas ouvert."
+        );
+
+        return;
+
+      }
+
+
+      show("registration");
+
+      $("registration")
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+    }
+  );
+
+
+/* =====================================================
+   INSCRIPTION DE L'ÉLECTEUR
+===================================================== */
+
+$("registrationForm")
+  .addEventListener(
+    "submit",
+    async event => {
+
+      event.preventDefault();
+
+
+      $("registrationError").textContent = "";
+
+
+      if (!isElectionOpen()) {
+
+        $("registrationError").textContent =
+          "Le scrutin n'est pas ouvert.";
+
+        return;
+
+      }
+
+
+      const firstName =
+        $("voterFirstName")
+          .value
+          .trim();
+
+
+      const lastName =
+        $("voterLastName")
+          .value
+          .trim();
+
+
+      const birthDate =
+        $("birthDate").value;
+
+
+      const documentType =
+        $("documentType").value;
+
+
+      const documentNumber =
+        $("documentNumber")
+          .value
+          .trim();
+
+
+      const file =
+        $("documentFile")
+          .files[0];
+
+
+      /* VÉRIFICATION DE L'ÂGE */
+
+      const age =
+        ageFromDate(birthDate);
+
+
+      if (age < 15 || age > 40) {
+
+        $("registrationError").textContent =
+          "Vous devez avoir entre 15 et 40 ans.";
+
+        return;
+
+      }
+
+
+      /* VÉRIFICATION DU FICHIER */
+
+      if (!file) {
+
+        $("registrationError").textContent =
+          "Veuillez joindre une pièce justificative.";
+
+        return;
+
+      }
+
+
+      /* LIMITE 10 MB */
+
+      if (file.size > 10 * 1024 * 1024) {
+
+        $("registrationError").textContent =
+          "Le fichier ne doit pas dépasser 10 Mo.";
+
+        return;
+
+      }
+
+
+      const button =
+        $("registrationButton");
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "Enregistrement en cours...";
+
+
+      try {
+
+
+        /* =================================================
+           1. CRÉATION DE L'ÉLECTEUR
+        ================================================= */
+
+        const voterId =
+          crypto.randomUUID();
+
+
+        const {
+          error: voterError
+        } = await supabaseClient
+          .from("electeurs")
+          .insert({
+
+            id: voterId,
+
+            nom_prenom:
+              `${lastName} ${firstName}`,
+
+            type_piece:
+              documentType,
+
+            numero_piece:
+              documentNumber || null,
+
+            date_naissance:
+              birthDate,
+
+            est_verifie:
+              false,
+
+            a_vote:
+              false
+
+          });
+
+
+        if (voterError) {
+
+          console.error(voterError);
+
+          throw new Error(
+            "Impossible d'enregistrer votre inscription."
+          );
+
+        }
+
+
+        /* =================================================
+           2. ENVOI DE LA PIÈCE D'IDENTITÉ
+        ================================================= */
+
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        const filePath =
+          `${voterId}/${crypto.randomUUID()}.${extension}`;
+
+
+        const {
+          error: uploadError
+        } = await supabaseClient
+          .storage
+          .from("pieces_identite")
+          .upload(
+            filePath,
+            file,
+            {
+              upsert: false,
+              contentType: file.type
+            }
+          );
+
+
+        if (uploadError) {
+
+          console.error(uploadError);
+
+          /* suppression de l'électeur
+             si l'envoi du document échoue */
+
+          await supabaseClient
+            .from("electeurs")
+            .delete()
+            .eq("id", voterId);
+
+
+          throw new Error(
+            "Impossible d'envoyer votre pièce justificative."
+          );
+
+        }
+
+
+        /* =================================================
+           3. ENREGISTRER LE CHEMIN DU DOCUMENT
+        ================================================= */
+
+        const {
+          error: updateError
+        } = await supabaseClient
+          .from("electeurs")
+          .update({
+            piece_url: filePath
+          })
+          .eq("id", voterId);
+
+
+        if (updateError) {
+
+          console.error(updateError);
+
+          throw new Error(
+            "Impossible de finaliser votre inscription."
+          );
+
+        }
+
+
+        /* =================================================
+           4. MÉMORISER L'ÉLECTEUR
+        ================================================= */
+
+        currentVoter = {
+
+          id: voterId,
+
+          firstName,
+
+          lastName,
+
+          birthDate,
+
+          age,
+
+          documentType,
+
+          documentNumber,
+
+          hasVoted: false
+
+        };
+
+
+        /* =================================================
+           5. AFFICHER LES CANDIDATS
+        ================================================= */
+
+        await showCandidates();
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        $("registrationError").textContent =
+          error.message ||
+          "Une erreur est survenue.";
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+          "Valider mon inscription →";
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   CHARGER LES CANDIDATS
+===================================================== */
+
+async function showCandidates() {
+
+  hide("registration");
+
+  show("candidates");
+
+
+  $("publicCandidates").innerHTML = `
+    <div class="card">
+      Chargement des candidats...
+    </div>
+  `;
+
+
+  $("candidates")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+
+  const {
+    data: candidates,
+    error
+  } = await supabaseClient
+    .from("candidats")
+    .select(
+      "id,nom_prenom,photo_url,profession,programme,ambition"
+    )
+    .order("created_at", {
+      ascending: true
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    $("publicCandidates").innerHTML = `
+      <div class="card">
+        Impossible de charger les candidats.
+      </div>
+    `;
+
     return;
+
   }
 
-  currentVoter = {
-    id: crypto.randomUUID(),
-    firstName: $("voterFirstName").value.trim(),
-    lastName: $("voterLastName").value.trim(),
-    birthDate,
-    age,
-    documentType: $("documentType").value,
-    documentNumber,
-    registeredAt: new Date().toISOString(),
-    hasVoted: false
+
+  if (!candidates || candidates.length === 0) {
+
+    $("publicCandidates").innerHTML = `
+      <div class="empty card">
+        Aucun candidat n'a encore été ajouté
+        par l'administration.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  $("publicCandidates").innerHTML =
+    candidates
+      .map(candidate => {
+
+        const photo =
+          candidate.photo_url ||
+          "https://via.placeholder.com/500x500?text=Photo";
+
+
+        const programme =
+          candidate.programme || "";
+
+
+        const ambition =
+          candidate.ambition || "";
+
+
+        const motivation =
+          [programme, ambition]
+            .filter(Boolean)
+            .join("<br><br>");
+
+
+        return `
+
+          <article class="candidate-card">
+
+            <img
+              src="${escapeHtml(photo)}"
+              alt="Photo de ${escapeHtml(candidate.nom_prenom)}"
+            >
+
+            <div class="candidate-body">
+
+              <p class="candidate-label">
+                CANDIDAT
+              </p>
+
+              <h3>
+                ${escapeHtml(candidate.nom_prenom)}
+              </h3>
+
+              <p>
+                <strong>Profession :</strong>
+                ${escapeHtml(candidate.profession || "Non renseignée")}
+              </p>
+
+              <div class="motivation">
+
+                <strong>
+                  Programme et motivation
+                </strong>
+
+                <p>
+                  ${motivation || "Aucune information renseignée."}
+                </p>
+
+              </div>
+
+              <button
+                class="btn btn-primary btn-full"
+                onclick="vote('${candidate.id}', '${escapeHtml(candidate.nom_prenom).replace(/'/g, "\\'")}')"
+              >
+                Je vote
+              </button>
+
+            </div>
+
+          </article>
+
+        `;
+
+      })
+      .join("");
+
+}
+
+
+/* =====================================================
+   VOTE
+===================================================== */
+
+window.vote =
+  async function(candidateId, candidateName) {
+
+    if (!isElectionOpen()) {
+
+      alert(
+        "Le scrutin est clôturé."
+      );
+
+      return;
+
+    }
+
+
+    if (!currentVoter) {
+
+      alert(
+        "Veuillez d'abord vous inscrire."
+      );
+
+      return;
+
+    }
+
+
+    if (currentVoter.hasVoted) {
+
+      alert(
+        "Vous avez déjà voté."
+      );
+
+      return;
+
+    }
+
+
+    const confirmation =
+      confirm(
+        `Confirmer votre vote pour ${candidateName} ?`
+      );
+
+
+    if (!confirmation)
+      return;
+
+
+    const buttons =
+      document.querySelectorAll(
+        "#publicCandidates button"
+      );
+
+
+    buttons.forEach(button => {
+
+      button.disabled = true;
+
+      button.textContent =
+        "Vote en cours...";
+
+    });
+
+
+    try {
+
+
+      /* =================================================
+         LE VOTE PASSE PAR LA FONCTION SÉCURISÉE SUPABASE
+      ================================================= */
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .rpc(
+          "enregistrer_vote",
+          {
+            p_electeur_id:
+              currentVoter.id,
+
+            p_candidat_id:
+              candidateId
+          }
+        );
+
+
+      if (error) {
+
+        console.error(error);
+
+        throw new Error(
+          error.message ||
+          "Impossible d'enregistrer le vote."
+        );
+
+      }
+
+
+      currentVoter.hasVoted =
+        true;
+
+
+      hide("candidates");
+
+      show("confirmation");
+
+
+      $("confirmationText").innerHTML =
+
+        `Merci <strong>${escapeHtml(currentVoter.firstName)}</strong>.
+        Votre vote pour
+        <strong>${escapeHtml(candidateName)}</strong>
+        a bien été enregistré.`;
+
+
+      $("confirmation")
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        error.message ||
+        "Une erreur est survenue pendant le vote."
+      );
+
+
+      buttons.forEach(button => {
+
+        button.disabled = false;
+
+        button.textContent =
+          "Je vote";
+
+      });
+
+    }
+
   };
 
-  voters.push(currentVoter);
-  saveVoters(voters);
-  showCandidates();
-});
 
-function showCandidates() {
-  const candidates = getCandidates();
-  hide("registration");
-  show("candidates");
-  $("candidates").scrollIntoView({behavior:"smooth"});
+/* =====================================================
+   INITIALISATION
+===================================================== */
 
-  $("publicCandidates").innerHTML = candidates.length ? candidates.map(c => `
-    <article class="candidate-card">
-      <img src="${c.photo || 'https://via.placeholder.com/500x500?text=Photo'}" alt="Photo de ${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}">
-      <div class="candidate-body">
-        <p class="candidate-label">CANDIDAT</p>
-        <h3>${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}</h3>
-        <p><strong>Profession :</strong> ${escapeHtml(c.profession)}</p>
-        <div class="motivation"><strong>Message de motivation</strong><p>${escapeHtml(c.motivation)}</p></div>
-        <button class="btn btn-primary btn-full" onclick="vote('${c.id}')">Je vote</button>
-      </div>
-    </article>
-  `).join("") : `
-    <div class="empty card">Aucun candidat n'a encore été ajouté par l'administration.</div>
-  `;
-}
+loadElectionConfig();
 
-window.vote = function(candidateId) {
-  if (isClosed()) return alert("Le scrutin est clôturé.");
-  if (!currentVoter) return alert("Veuillez d'abord vous inscrire.");
-  if (currentVoter.hasVoted) return alert("Vous avez déjà voté.");
-
-  const candidates = getCandidates();
-  const candidate = candidates.find(c => c.id === candidateId);
-  if (!candidate) return alert("Candidat introuvable.");
-
-  if (!confirm(`Confirmer votre vote pour ${candidate.firstName} ${candidate.lastName} ?`)) return;
-
-  const votes = getVotes();
-  votes[candidateId] = Number(votes[candidateId] || 0) + 1;
-  saveVotes(votes);
-
-  const voters = getVoters();
-  const index = voters.findIndex(v => v.id === currentVoter.id);
-  if (index >= 0) {
-    voters[index].hasVoted = true;
-    saveVoters(voters);
-  }
-
-  currentVoter.hasVoted = true;
-  hide("candidates");
-  show("confirmation");
-  $("confirmationText").innerHTML = `Merci <strong>${escapeHtml(currentVoter.firstName)}</strong>. Votre vote pour <strong>${escapeHtml(candidate.firstName)} ${escapeHtml(candidate.lastName)}</strong> a bien été enregistré.`;
-  $("confirmation").scrollIntoView({behavior:"smooth"});
-};
 </script>
+
 </body>
 </html>
