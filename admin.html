@@ -3,178 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Administration</title>
+  <title>Connexion Administration</title>
 </head>
 
 <body>
 
-  <h1>Test connexion administrateur</h1>
+  <h1>Administration — Élection Président des Jeunes</h1>
 
-  <div id="message" style="
-    padding:20px;
-    margin:20px;
-    background:#f1f1f1;
-    border-radius:10px;
-    font-size:18px;
-  ">
-    Chargement du test...
-  </div>
+  <div id="status">Chargement de Supabase...</div>
+
+  <br>
 
   <input
-    id="email"
     type="email"
-    placeholder="E-mail"
-    style="padding:12px; display:block; margin:10px;"
+    id="email"
+    placeholder="Adresse e-mail"
   >
+
+  <br><br>
 
   <input
-    id="password"
     type="password"
+    id="password"
     placeholder="Mot de passe"
-    style="padding:12px; display:block; margin:10px;"
   >
 
-  <button
-    id="login"
-    style="padding:12px 20px; margin:10px;"
-  >
-    TESTER LA CONNEXION
-  </button>
+  <br><br>
 
+  <button id="loginBtn">Se connecter</button>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-
-const message =
-  document.getElementById("message");
-
-
-/* TEST 1 : JavaScript */
-
-message.textContent =
-  "✅ JavaScript fonctionne. Vérification de Supabase...";
-
-
-/* TEST 2 : bibliothèque Supabase */
-
-if (!window.supabase) {
-
-  message.textContent =
-    "❌ ERREUR : la bibliothèque Supabase ne se charge pas.";
-
-} else {
-
-  message.textContent =
-    "✅ Supabase est chargé. Vérification de la connexion...";
-
-
-  try {
+  <script>
 
     const SUPABASE_URL =
       "https://qktfqpsqmcrgtmauntfj.supabase.co";
 
-
     const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXAiLCJyZWYiOiJxa3RmcXBzcW1jcmd0bWF1bnRqIiwiaWF0IjoxNzkwOTc1NTAxLCJleHAiOjIxMDY1NTE1MDF9.sugP-f143dYuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrdGZxcHNxbWNyZ3RtYXVudGZqIiwiaWF0IjoxNzkwOTc1NTAxLCJleHAiOjIxMDY1NTE1MDF9.sugP-f143dYuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
 
+    const status = document.getElementById("status");
+    const loginBtn = document.getElementById("loginBtn");
 
-    const db =
-      window.supabase.createClient(
+    if (!window.supabase) {
+
+      status.textContent =
+        "❌ La bibliothèque Supabase ne se charge pas.";
+
+    } else {
+
+      const db = window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY
       );
 
+      status.textContent =
+        "✅ Supabase est prêt. Tu peux tester la connexion.";
 
-    message.textContent =
-      "✅ Supabase est prêt. Tu peux tester la connexion.";
+      loginBtn.addEventListener("click", async () => {
 
+        const email =
+          document.getElementById("email").value.trim();
 
-    document
-      .getElementById("login")
-      .addEventListener(
-        "click",
-        async function() {
+        const password =
+          document.getElementById("password").value;
 
-          message.textContent =
-            "⏳ Connexion en cours...";
+        if (!email || !password) {
 
+          status.textContent =
+            "⚠️ Entre ton e-mail et ton mot de passe.";
 
-          const email =
-            document
-              .getElementById("email")
-              .value
-              .trim();
-
-
-          const password =
-            document
-              .getElementById("password")
-              .value;
-
-
-          if (!email || !password) {
-
-            message.textContent =
-              "❌ Entre l'e-mail et le mot de passe.";
-
-            return;
-
-          }
-
-
-          try {
-
-            const result =
-              await db.auth.signInWithPassword({
-
-                email: email,
-
-                password: password
-
-              });
-
-
-            if (result.error) {
-
-              message.textContent =
-                "❌ Supabase répond : " +
-                result.error.message;
-
-              return;
-
-            }
-
-
-            message.textContent =
-              "✅ CONNEXION RÉUSSIE !";
-
-          }
-
-          catch(error) {
-
-            message.textContent =
-              "❌ Erreur : " +
-              error.message;
-
-          }
-
+          return;
         }
-      );
 
-  }
+        status.textContent =
+          "⏳ Connexion en cours...";
 
-  catch(error) {
+        const { data, error } =
+          await db.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
 
-    message.textContent =
-      "❌ Erreur lors du démarrage de Supabase : " +
-      error.message;
+        if (error) {
 
-  }
+          status.textContent =
+            "❌ " + error.message;
 
-}
+          console.error(error);
 
-</script>
+          return;
+        }
+
+        status.textContent =
+          "✅ Connexion réussie !";
+
+        console.log("Utilisateur connecté :", data.user);
+
+      });
+
+    }
+
+  </script>
 
 </body>
 </html>
