@@ -6,288 +6,1318 @@
   <title>Administration — Élection Président des Jeunes</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="brand-mark">PJ</span>
-      <div>
-        <strong>Président des Jeunes</strong>
-        <small>Administration</small>
-      </div>
-    </div>
-    <a class="btn btn-light" href="index.html">← Site public</a>
-  </header>
 
-  <main class="container admin-page">
-    <section id="loginCard" class="card auth-card">
-      <h1>Connexion administrateur</h1>
-      <p class="muted">Accès réservé à l'administration.</p>
-      <form id="loginForm">
-        <label>Mot de passe
-          <input id="adminPassword" type="password" required placeholder="Mot de passe">
-        </label>
-        <button class="btn btn-primary" type="submit">Se connecter</button>
-        <p id="loginError" class="error"></p>
-      </form>
-    </section>
-
-    <div id="dashboard" class="hidden">
-      <section class="page-title">
-        <div>
-          <p class="eyebrow">TABLEAU DE BORD</p>
-          <h1>Gestion du scrutin</h1>
-          <p id="statusText" class="muted"></p>
-        </div>
-        <button id="logoutBtn" class="btn btn-outline">Déconnexion</button>
-      </section>
-
-      <div class="stats-grid">
-        <div class="stat-card"><span>Candidats</span><strong id="candidateCount">0</strong><small>/ 5 maximum</small></div>
-        <div class="stat-card"><span>Électeurs inscrits</span><strong id="voterCount">0</strong></div>
-        <div class="stat-card"><span>Ouverture / clôture</span><strong>11/10/2026</strong><small>Clôture à 08:00</small></div>
-      </div>
-
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <h2>Candidats</h2>
-            <p class="muted">Ajoutez de 1 à 5 candidats. Après le 11/10/2026 à 18:00, aucune modification n'est possible.</p>
-          </div>
-          <button id="addCandidateBtn" class="btn btn-primary">+ Ajouter un candidat</button>
-        </div>
-        <div id="candidateLock" class="notice notice-warning hidden">
-          🔒 Le scrutin est clôturé. L'ajout, la modification et la suppression des candidats sont désactivés.
-        </div>
-        <div id="candidateAdminList" class="admin-candidates"></div>
-      </section>
-
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <h2>Électeurs inscrits</h2>
-            <p class="muted">Liste des personnes ayant validé leur inscription.</p>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Nom & prénom</th><th>Date de naissance</th><th>Âge</th><th>Document</th><th>Date d'inscription</th></tr></thead>
-            <tbody id="votersTable"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <h2>Résultats du vote</h2>
-            <p class="muted">Les totaux des candidats sont invisibles avant la clôture automatique.</p>
-          </div>
-        </div>
-        <div id="resultsLocked" class="notice notice-info">
-          🔐 Les résultats seront accessibles à l'administration uniquement après le 11/10/2026 à 18:00.
-        </div>
-        <div id="resultsContent" class="hidden">
-          <div id="resultsList" class="results-list"></div>
-          <div class="result-total"><span>Total des votes</span><strong id="totalVotes">0</strong></div>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <div id="candidateModal" class="modal hidden">
-    <div class="modal-box">
-      <button class="modal-close" id="closeModal">×</button>
-      <h2 id="modalTitle">Ajouter un candidat</h2>
-      <form id="candidateForm">
-        <input id="candidateId" type="hidden">
-        <label>Photo du candidat
-          <input id="candidatePhoto" type="file" accept="image/*">
-        </label>
-        <div id="photoPreview" class="photo-preview"></div>
-        <div class="form-grid">
-          <label>Nom
-            <input id="candidateLastName" required maxlength="50">
-          </label>
-          <label>Prénom
-            <input id="candidateFirstName" required maxlength="50">
-          </label>
-        </div>
-        <label>Profession
-          <input id="candidateProfession" required maxlength="100">
-        </label>
-        <label>Message de motivation
-          <textarea id="candidateMotivation" required rows="5" maxlength="1000"></textarea>
-        </label>
-        <div class="modal-actions">
-          <button type="button" id="cancelModal" class="btn btn-outline">Annuler</button>
-          <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </div>
-      </form>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">PJ</span>
+    <div>
+      <strong>Président des Jeunes</strong>
+      <small>Administration</small>
     </div>
   </div>
 
+  <a class="btn btn-light" href="index.html">← Site public</a>
+</header>
+
+<main class="container admin-page">
+
+  <!-- CONNEXION -->
+  <section id="loginCard" class="card auth-card">
+
+    <h1>Connexion administrateur</h1>
+
+    <p class="muted">
+      Accès réservé à l'administration.
+    </p>
+
+    <form id="loginForm">
+
+      <label>
+        Adresse e-mail
+        <input
+          id="adminEmail"
+          type="email"
+          required
+          placeholder="Adresse e-mail"
+        >
+      </label>
+
+      <label>
+        Mot de passe
+        <input
+          id="adminPassword"
+          type="password"
+          required
+          placeholder="Mot de passe"
+        >
+      </label>
+
+      <button class="btn btn-primary" type="submit">
+        Se connecter
+      </button>
+
+      <p id="loginError" class="error"></p>
+
+    </form>
+  </section>
+
+
+  <!-- TABLEAU DE BORD -->
+  <div id="dashboard" class="hidden">
+
+    <section class="page-title">
+
+      <div>
+        <p class="eyebrow">TABLEAU DE BORD</p>
+
+        <h1>Gestion du scrutin</h1>
+
+        <p id="statusText" class="muted"></p>
+      </div>
+
+      <button id="logoutBtn" class="btn btn-outline">
+        Déconnexion
+      </button>
+
+    </section>
+
+
+    <!-- STATISTIQUES -->
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <span>Candidats</span>
+        <strong id="candidateCount">0</strong>
+        <small>/ 5 maximum</small>
+      </div>
+
+      <div class="stat-card">
+        <span>Électeurs inscrits</span>
+        <strong id="voterCount">0</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>Scrutin</span>
+        <strong>11/10/2026</strong>
+        <small>08:00 → 18:00</small>
+      </div>
+
+    </div>
+
+
+    <!-- CANDIDATS -->
+    <section class="card">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Candidats</h2>
+
+          <p class="muted">
+            Maximum 5 candidats.
+          </p>
+        </div>
+
+        <button
+          id="addCandidateBtn"
+          class="btn btn-primary"
+        >
+          + Ajouter un candidat
+        </button>
+
+      </div>
+
+
+      <div
+        id="candidateLock"
+        class="notice notice-warning hidden"
+      >
+        🔒 À partir du 11 octobre 2026 à 08:00,
+        l'ajout, la modification et la suppression des candidats
+        sont désactivés.
+      </div>
+
+
+      <div
+        id="candidateAdminList"
+        class="admin-candidates"
+      ></div>
+
+    </section>
+
+
+    <!-- ELECTEURS -->
+    <section class="card">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Électeurs inscrits</h2>
+
+          <p class="muted">
+            Liste des personnes inscrites.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Nom & prénom</th>
+              <th>Date de naissance</th>
+              <th>Document</th>
+              <th>Date d'inscription</th>
+            </tr>
+          </thead>
+
+          <tbody id="votersTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- RESULTATS -->
+    <section class="card">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>Résultats du vote</h2>
+
+          <p class="muted">
+            Les résultats sont cachés pendant le scrutin.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div
+        id="resultsLocked"
+        class="notice notice-info"
+      >
+        🔐 Les résultats seront accessibles uniquement
+        après la clôture automatique à 18:00.
+      </div>
+
+
+      <div id="resultsContent" class="hidden">
+
+        <div id="resultsList" class="results-list"></div>
+
+        <div class="result-total">
+          <span>Total des votes</span>
+          <strong id="totalVotes">0</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<!-- MODALE CANDIDAT -->
+<div id="candidateModal" class="modal hidden">
+
+  <div class="modal-box">
+
+    <button
+      class="modal-close"
+      id="closeModal"
+      type="button"
+    >
+      ×
+    </button>
+
+    <h2 id="modalTitle">
+      Ajouter un candidat
+    </h2>
+
+
+    <form id="candidateForm">
+
+      <input
+        id="candidateId"
+        type="hidden"
+      >
+
+
+      <label>
+        Photo du candidat
+
+        <input
+          id="candidatePhoto"
+          type="file"
+          accept="image/*"
+        >
+      </label>
+
+
+      <div
+        id="photoPreview"
+        class="photo-preview"
+      ></div>
+
+
+      <label>
+        Nom et prénom
+
+        <input
+          id="candidateName"
+          required
+          maxlength="150"
+          placeholder="Exemple : Kouamé N'diamoi Theodore"
+        >
+      </label>
+
+
+      <label>
+        Profession
+
+        <input
+          id="candidateProfession"
+          required
+          maxlength="100"
+          placeholder="Profession"
+        >
+      </label>
+
+
+      <label>
+        Programme / motivation
+
+        <textarea
+          id="candidateMotivation"
+          required
+          rows="6"
+          maxlength="2000"
+          placeholder="Présentez le programme et les motivations du candidat"
+        ></textarea>
+      </label>
+
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          id="cancelModal"
+          class="btn btn-outline"
+        >
+          Annuler
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+        >
+          Enregistrer
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 <script>
-const CUTOFF = new Date("2026-10-11T18:00:00");
-const ADMIN_PASSWORD = "admin2026"; // À remplacer par une vraie authentification côté serveur.
-const $ = id => document.getElementById(id);
 
-function isClosed() { return new Date() >= CUTOFF; }
-function getCandidates() { return JSON.parse(localStorage.getItem("candidates") || "[]"); }
-function saveCandidates(data) { localStorage.setItem("candidates", JSON.stringify(data)); }
-function getVoters() { return JSON.parse(localStorage.getItem("voters") || "[]"); }
-function getVotes() { return JSON.parse(localStorage.getItem("votes") || "{}"); }
+const SUPABASE_URL =
+  "https://qktfqpsqmcrgtmauntfj.supabase.co";
 
-function refresh() {
-  const candidates = getCandidates();
-  const voters = getVoters();
-  const closed = isClosed();
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwicmVmIjoicWt0ZnFwc3FtY3JndG1hdW50ZmoiLCJpYXQiOjE3OTA5NzU1MDEsImV4cCI6MjEwNjU1MTUwMSwiZXhwIjoyMTA2NTUxNTAxfQ.sugP-f143dYuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
 
-  $("candidateCount").textContent = candidates.length;
-  $("voterCount").textContent = voters.length;
-  $("statusText").textContent = closed
-    ? "Scrutin clôturé automatiquement le 11 octobre 2026 à 18:00."
-    : "Scrutin en cours. Les résultats restent confidentiels jusqu'à la clôture.";
+const { createClient } =
+  supabase;
 
-  $("addCandidateBtn").disabled = closed || candidates.length >= 5;
-  $("candidateLock").classList.toggle("hidden", !closed);
+const db = createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-  $("candidateAdminList").innerHTML = candidates.length ? candidates.map(c => `
-    <article class="candidate-admin">
-      <img src="${c.photo || 'https://via.placeholder.com/120x120?text=Photo'}" alt="Photo">
-      <div class="candidate-admin-info">
-        <h3>${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}</h3>
-        <p><strong>Profession :</strong> ${escapeHtml(c.profession)}</p>
-        <p>${escapeHtml(c.motivation)}</p>
-      </div>
-      <div class="candidate-actions">
-        <button class="btn btn-small btn-outline" onclick="editCandidate('${c.id}')" ${closed ? "disabled" : ""}>Modifier</button>
-        <button class="btn btn-small btn-danger" onclick="deleteCandidate('${c.id}')" ${closed ? "disabled" : ""}>Supprimer</button>
-      </div>
-    </article>
-  `).join("") : `<div class="empty">Aucun candidat. Ajoutez entre 1 et 5 candidats avant la clôture.</div>`;
 
-  $("votersTable").innerHTML = voters.length ? voters.map(v => `
-    <tr>
-      <td><strong>${escapeHtml(v.firstName)} ${escapeHtml(v.lastName)}</strong></td>
-      <td>${escapeHtml(v.birthDate)}</td>
-      <td>${v.age} ans</td>
-      <td>${escapeHtml(v.documentType)}</td>
-      <td>${new Date(v.registeredAt).toLocaleString("fr-FR")}</td>
-    </tr>
-  `).join("") : `<tr><td colspan="5" class="empty">Aucun électeur inscrit.</td></tr>`;
+const $ = id =>
+  document.getElementById(id);
 
-  $("resultsLocked").classList.toggle("hidden", closed);
-  $("resultsContent").classList.toggle("hidden", !closed);
 
-  if (closed) {
-    const votes = getVotes();
-    let total = 0;
-    $("resultsList").innerHTML = candidates.map(c => {
-      const count = Number(votes[c.id] || 0);
-      total += count;
-      return `<div class="result-row"><div><strong>${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}</strong><div class="progress"><span style="width:${Math.min(count,100)}%"></span></div></div><strong>${count} vote(s)</strong></div>`;
-    }).join("") || `<div class="empty">Aucun candidat.</div>`;
-    $("totalVotes").textContent = total;
+/*
+  DATE DE BLOCAGE ADMINISTRATEUR
+
+  11 octobre 2026 à 08:00
+  Heure Côte d'Ivoire = UTC
+*/
+const CANDIDATE_CUTOFF =
+  new Date("2026-10-11T08:00:00Z");
+
+
+function candidateEditingLocked() {
+
+  return new Date() >= CANDIDATE_CUTOFF;
+
+}
+
+
+/* ------------------------------
+   CONNEXION ADMIN
+-------------------------------- */
+
+$("loginForm").addEventListener(
+  "submit",
+  async function(e) {
+
+    e.preventDefault();
+
+    $("loginError").textContent = "";
+
+    const email =
+      $("adminEmail").value.trim();
+
+    const password =
+      $("adminPassword").value;
+
+
+    const { error } =
+      await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+
+    if (error) {
+
+      $("loginError").textContent =
+        "Adresse e-mail ou mot de passe incorrect.";
+
+      return;
+    }
+
+
+    showDashboard();
+
   }
+);
+
+
+/* ------------------------------
+   AFFICHER TABLEAU DE BORD
+-------------------------------- */
+
+function showDashboard() {
+
+  $("loginCard").classList.add("hidden");
+
+  $("dashboard").classList.remove("hidden");
+
+  refresh();
+
 }
 
-function escapeHtml(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+/* ------------------------------
+   DECONNEXION
+-------------------------------- */
+
+$("logoutBtn").addEventListener(
+  "click",
+  async function() {
+
+    await db.auth.signOut();
+
+    location.reload();
+
+  }
+);
+
+
+/* ------------------------------
+   VERIFICATION SESSION
+-------------------------------- */
+
+async function checkSession() {
+
+  const {
+    data: { session }
+  } = await db.auth.getSession();
+
+
+  if (session) {
+
+    showDashboard();
+
+  }
+
 }
 
-$("loginForm").addEventListener("submit", e => {
-  e.preventDefault();
-  if ($("adminPassword").value === ADMIN_PASSWORD) {
-    sessionStorage.setItem("adminLogged", "1");
-    $("loginCard").classList.add("hidden");
-    $("dashboard").classList.remove("hidden");
-    refresh();
-  } else $("loginError").textContent = "Mot de passe incorrect.";
-});
 
-$("logoutBtn").addEventListener("click", () => {
-  sessionStorage.removeItem("adminLogged");
-  location.reload();
-});
+checkSession();
+
+
+/* ------------------------------
+   CHARGER CANDIDATS
+-------------------------------- */
+
+async function loadCandidates() {
+
+  const {
+    data,
+    error
+  } = await db
+    .from("candidats")
+    .select(
+      "id,nom_prenom,photo_url,profession,programme,ambition,created_at"
+    )
+    .order("created_at", {
+      ascending: true
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "Impossible de charger les candidats."
+    );
+
+    return [];
+
+  }
+
+
+  return data || [];
+
+}
+
+
+/* ------------------------------
+   AFFICHER CANDIDATS
+-------------------------------- */
+
+async function renderCandidates() {
+
+  const candidates =
+    await loadCandidates();
+
+
+  $("candidateCount").textContent =
+    candidates.length;
+
+
+  const locked =
+    candidateEditingLocked();
+
+
+  $("addCandidateBtn").disabled =
+    locked || candidates.length >= 5;
+
+
+  $("candidateLock")
+    .classList
+    .toggle(
+      "hidden",
+      !locked
+    );
+
+
+  if (!candidates.length) {
+
+    $("candidateAdminList").innerHTML =
+      `<div class="empty">
+        Aucun candidat enregistré.
+      </div>`;
+
+    return;
+
+  }
+
+
+  $("candidateAdminList").innerHTML =
+    candidates.map(c => `
+
+      <article class="candidate-admin">
+
+        <img
+          src="${escapeHtml(
+            c.photo_url ||
+            "https://via.placeholder.com/120x120?text=Photo"
+          )}"
+          alt="Photo du candidat"
+        >
+
+        <div class="candidate-admin-info">
+
+          <h3>
+            ${escapeHtml(c.nom_prenom)}
+          </h3>
+
+          <p>
+            <strong>Profession :</strong>
+            ${escapeHtml(c.profession)}
+          </p>
+
+          <p>
+            ${escapeHtml(c.programme || "")}
+          </p>
+
+        </div>
+
+
+        <div class="candidate-actions">
+
+          <button
+            class="btn btn-small btn-outline"
+            onclick="editCandidate('${c.id}')"
+            ${locked ? "disabled" : ""}
+          >
+            Modifier
+          </button>
+
+
+          <button
+            class="btn btn-small btn-danger"
+            onclick="deleteCandidate('${c.id}')"
+            ${locked ? "disabled" : ""}
+          >
+            Supprimer
+          </button>
+
+        </div>
+
+      </article>
+
+    `).join("");
+
+}
+
+
+/* ------------------------------
+   OUVRIR MODALE
+-------------------------------- */
 
 function openModal(candidate = null) {
-  if (isClosed()) return;
+
+  if (candidateEditingLocked()) {
+
+    alert(
+      "Les candidats sont maintenant verrouillés."
+    );
+
+    return;
+  }
+
+
   $("candidateForm").reset();
-  $("candidateId").value = candidate?.id || "";
-  $("modalTitle").textContent = candidate ? "Modifier le candidat" : "Ajouter un candidat";
-  $("photoPreview").innerHTML = candidate?.photo ? `<img src="${candidate.photo}" alt="Aperçu">` : "";
-  $("candidateLastName").value = candidate?.lastName || "";
-  $("candidateFirstName").value = candidate?.firstName || "";
-  $("candidateProfession").value = candidate?.profession || "";
-  $("candidateMotivation").value = candidate?.motivation || "";
-  $("candidateModal").classList.remove("hidden");
+
+  $("candidateId").value =
+    candidate?.id || "";
+
+
+  $("modalTitle").textContent =
+    candidate
+      ? "Modifier le candidat"
+      : "Ajouter un candidat";
+
+
+  $("candidateName").value =
+    candidate?.nom_prenom || "";
+
+
+  $("candidateProfession").value =
+    candidate?.profession || "";
+
+
+  $("candidateMotivation").value =
+    candidate?.programme || "";
+
+
+  $("photoPreview").innerHTML =
+    candidate?.photo_url
+      ? `<img src="${escapeHtml(candidate.photo_url)}" alt="Aperçu">`
+      : "";
+
+
+  $("candidateModal")
+    .classList
+    .remove("hidden");
+
 }
 
-$("addCandidateBtn").addEventListener("click", () => {
-  if (getCandidates().length >= 5) return alert("Maximum 5 candidats.");
-  openModal();
-});
-$("closeModal").onclick = () => $("candidateModal").classList.add("hidden");
-$("cancelModal").onclick = () => $("candidateModal").classList.add("hidden");
 
-$("candidatePhoto").addEventListener("change", e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => $("photoPreview").innerHTML = `<img src="${reader.result}" alt="Aperçu">`;
-  reader.readAsDataURL(file);
-});
+/* ------------------------------
+   AJOUT CANDIDAT
+-------------------------------- */
 
-$("candidateForm").addEventListener("submit", e => {
-  e.preventDefault();
-  if (isClosed()) return alert("Le scrutin est clôturé : modification impossible.");
+$("addCandidateBtn").addEventListener(
+  "click",
+  async function() {
 
-  const candidates = getCandidates();
-  const id = $("candidateId").value || crypto.randomUUID();
-  const existing = candidates.find(c => c.id === id);
-  const photoFile = $("candidatePhoto").files[0];
+    const candidates =
+      await loadCandidates();
 
-  const save = photo => {
-    const item = {
-      id,
-      firstName: $("candidateFirstName").value.trim(),
-      lastName: $("candidateLastName").value.trim(),
-      profession: $("candidateProfession").value.trim(),
-      motivation: $("candidateMotivation").value.trim(),
-      photo: photo || existing?.photo || ""
-    };
-    if (!existing && candidates.length >= 5) return alert("Maximum 5 candidats.");
-    const index = candidates.findIndex(c => c.id === id);
-    if (index >= 0) candidates[index] = item; else candidates.push(item);
-    saveCandidates(candidates);
-    $("candidateModal").classList.add("hidden");
-    refresh();
+
+    if (candidates.length >= 5) {
+
+      alert(
+        "Le maximum de 5 candidats est atteint."
+      );
+
+      return;
+
+    }
+
+
+    openModal();
+
+  }
+);
+
+
+/* ------------------------------
+   FERMER MODALE
+-------------------------------- */
+
+$("closeModal").onclick =
+  () =>
+    $("candidateModal")
+      .classList
+      .add("hidden");
+
+
+$("cancelModal").onclick =
+  () =>
+    $("candidateModal")
+      .classList
+      .add("hidden");
+
+
+/* ------------------------------
+   APERCU PHOTO
+-------------------------------- */
+
+$("candidatePhoto").addEventListener(
+  "change",
+  function(e) {
+
+    const file =
+      e.target.files[0];
+
+    if (!file) return;
+
+
+    if (!file.type.startsWith("image/")) {
+
+      alert(
+        "Veuillez sélectionner une image."
+      );
+
+      e.target.value = "";
+
+      return;
+
+    }
+
+
+    if (file.size > 5 * 1024 * 1024) {
+
+      alert(
+        "La photo ne doit pas dépasser 5 Mo."
+      );
+
+      e.target.value = "";
+
+      return;
+
+    }
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      () => {
+
+        $("photoPreview").innerHTML =
+          `<img
+            src="${reader.result}"
+            alt="Aperçu"
+          >`;
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+  }
+);
+
+
+/* ------------------------------
+   ENREGISTRER CANDIDAT
+-------------------------------- */
+
+$("candidateForm").addEventListener(
+  "submit",
+  async function(e) {
+
+    e.preventDefault();
+
+
+    if (candidateEditingLocked()) {
+
+      alert(
+        "Les modifications des candidats sont maintenant interdites."
+      );
+
+      return;
+
+    }
+
+
+    const id =
+      $("candidateId").value;
+
+
+    const name =
+      $("candidateName")
+        .value
+        .trim();
+
+
+    const profession =
+      $("candidateProfession")
+        .value
+        .trim();
+
+
+    const motivation =
+      $("candidateMotivation")
+        .value
+        .trim();
+
+
+    if (!name || !profession || !motivation) {
+
+      alert(
+        "Veuillez remplir tous les champs."
+      );
+
+      return;
+
+    }
+
+
+    /* Vérification maximum 5 */
+
+    const candidates =
+      await loadCandidates();
+
+
+    if (!id && candidates.length >= 5) {
+
+      alert(
+        "Le maximum de 5 candidats est atteint."
+      );
+
+      return;
+
+    }
+
+
+    let photoUrl = null;
+
+
+    const existing =
+      id
+        ? candidates.find(c => c.id === id)
+        : null;
+
+
+    photoUrl =
+      existing?.photo_url || null;
+
+
+    /* Upload photo */
+
+    const file =
+      $("candidatePhoto")
+        .files[0];
+
+
+    if (file) {
+
+      const extension =
+        file.name
+          .split(".")
+          .pop()
+          .toLowerCase();
+
+
+      const fileName =
+        `${crypto.randomUUID()}.${extension}`;
+
+
+      const filePath =
+        `${crypto.randomUUID()}/${fileName}`;
+
+
+      const {
+        error: uploadError
+      } = await db.storage
+        .from("candidats_photos")
+        .upload(
+          filePath,
+          file,
+          {
+            upsert: false,
+            contentType: file.type
+          }
+        );
+
+
+      if (uploadError) {
+
+        console.error(uploadError);
+
+        alert(
+          "Erreur lors de l'envoi de la photo."
+        );
+
+        return;
+
+      }
+
+
+      const {
+        data: publicData
+      } = db.storage
+        .from("candidats_photos")
+        .getPublicUrl(filePath);
+
+
+      photoUrl =
+        publicData.publicUrl;
+
+    }
+
+
+    /* MODIFICATION */
+
+    if (id) {
+
+      const {
+        error
+      } = await db
+        .from("candidats")
+        .update({
+
+          nom_prenom: name,
+
+          profession: profession,
+
+          programme: motivation,
+
+          photo_url: photoUrl
+
+        })
+        .eq("id", id);
+
+
+      if (error) {
+
+        console.error(error);
+
+        alert(
+          "Erreur lors de la modification du candidat."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        "Candidat modifié avec succès."
+      );
+
+    }
+
+
+    /* AJOUT */
+
+    else {
+
+      const {
+        error
+      } = await db
+        .from("candidats")
+        .insert({
+
+          nom_prenom: name,
+
+          profession: profession,
+
+          programme: motivation,
+
+          ambition: "",
+
+          photo_url: photoUrl
+
+        });
+
+
+      if (error) {
+
+        console.error(error);
+
+        alert(
+          "Erreur lors de l'ajout du candidat."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        "Candidat ajouté avec succès."
+      );
+
+    }
+
+
+    $("candidateModal")
+      .classList
+      .add("hidden");
+
+
+    await renderCandidates();
+
+  }
+);
+
+
+/* ------------------------------
+   MODIFIER
+-------------------------------- */
+
+window.editCandidate =
+  async function(id) {
+
+    if (candidateEditingLocked()) {
+
+      alert(
+        "Les candidats sont maintenant verrouillés."
+      );
+
+      return;
+
+    }
+
+
+    const candidates =
+      await loadCandidates();
+
+
+    const candidate =
+      candidates.find(
+        c => c.id === id
+      );
+
+
+    if (candidate) {
+
+      openModal(candidate);
+
+    }
+
   };
 
-  if (photoFile) {
-    const reader = new FileReader();
-    reader.onload = () => save(reader.result);
-    reader.readAsDataURL(photoFile);
-  } else save("");
-});
 
-window.editCandidate = id => {
-  const c = getCandidates().find(x => x.id === id);
-  if (c) openModal(c);
-};
+/* ------------------------------
+   SUPPRIMER
+-------------------------------- */
 
-window.deleteCandidate = id => {
-  if (isClosed()) return alert("Le scrutin est clôturé.");
-  if (!confirm("Supprimer ce candidat ?")) return;
-  saveCandidates(getCandidates().filter(c => c.id !== id));
-  refresh();
-};
+window.deleteCandidate =
+  async function(id) {
 
-if (sessionStorage.getItem("adminLogged") === "1") {
-  $("loginCard").classList.add("hidden");
-  $("dashboard").classList.remove("hidden");
-  refresh();
+    if (candidateEditingLocked()) {
+
+      alert(
+        "Les candidats sont maintenant verrouillés."
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !confirm(
+        "Voulez-vous vraiment supprimer ce candidat ?"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    const {
+      error
+    } = await db
+      .from("candidats")
+      .delete()
+      .eq("id", id);
+
+
+    if (error) {
+
+      console.error(error);
+
+      alert(
+        "Impossible de supprimer le candidat."
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Candidat supprimé."
+    );
+
+
+    await renderCandidates();
+
+  };
+
+
+/* ------------------------------
+   ELECTEURS
+-------------------------------- */
+
+async function loadVoters() {
+
+  const {
+    data,
+    error
+  } = await db
+    .from("electeurs")
+    .select(
+      "nom_prenom,date_naissance,type_piece,created_at"
+    )
+    .order("created_at", {
+      ascending: false
+    });
+
+
+  if (error) {
+
+    console.error(error);
+
+    $("votersTable").innerHTML =
+      `<tr>
+        <td colspan="4">
+          Impossible de charger les électeurs.
+        </td>
+      </tr>`;
+
+    return;
+
+  }
+
+
+  $("voterCount").textContent =
+    data.length;
+
+
+  $("votersTable").innerHTML =
+    data.length
+
+      ? data.map(v => `
+
+        <tr>
+
+          <td>
+            <strong>
+              ${escapeHtml(v.nom_prenom)}
+            </strong>
+          </td>
+
+          <td>
+            ${escapeHtml(v.date_naissance || "")}
+          </td>
+
+          <td>
+            ${escapeHtml(v.type_piece || "")}
+          </td>
+
+          <td>
+            ${v.created_at
+              ? new Date(v.created_at)
+                  .toLocaleString("fr-FR")
+              : ""}
+          </td>
+
+        </tr>
+
+      `).join("")
+
+      : `
+        <tr>
+          <td colspan="4" class="empty">
+            Aucun électeur inscrit.
+          </td>
+        </tr>
+      `;
+
 }
-</script>
-</body>
-</html>
+
+
+/* ------------------------------
+   RESULTATS
+-------------------------------- */
+
+async function loadResults() {
+
+  const {
+    data: config,
+    error: configError
+  } = await db
+    .from("election_config")
+    .select("date_debut,date_fin")
+    .eq("id", 1)
+    .single();
+
+
+  if (configError) {
+
+    console.error(configError);
+
+    return;
+
+  }
+
+
+  const now =
+    new Date();
+
+
+  const start =
+    new Date(config.date_debut);
+
+
+  const end =
+    new Date(config.date_fin);
+
+
+  const beforeStart =
+    now < start;
+
+
+  const closed =
+    now >= end;
+
+
+  if (beforeStart) {
+
+    $("statusText").textContent =
+      "Le scrutin n'est pas encore ouvert.";
+
+
+  } else if (!closed) {
+
+    $("statusText").textContent =
+      "Scrutin ouvert. Les résultats restent confidentiels.";
+
+  } else {
+
+    $("statusText").textContent =
+      "Scrutin clôturé. Les résultats sont disponibles.";
+
+  }
+
+
+  $("resultsLocked")
+    .classList
+    .toggle(
+      "hidden",
+      closed
+    );
+
+
+  $("resultsContent")
+    .classList
+    .toggle(
+      "hidden",
+      !closed
+    );
+
+
+  if (!closed) return;
+
+
+  /*
+    Les résultats sont demandés seulement
+    après la clôture.
+  */
+
+  const {
+    data: votes,
+    error
+  } = await db
+    .from("votes")
+    .select("candidat_id");
+
+
+  if (error) {
+
+    console.error(error);
+
+    $("resultsList").innerHTML =
+      `<div class="empty">
+        Les résultats ne peuvent pas être chargés.
+      </div>`;
+
+    return;
+
+  }
+
+
+  const candidates =
+    await loadCandidates();
+
+
+  const counts = {};
+
+
+  candidates.forEach(c => {
+
+    counts[c.id] = 0;
+
+  });
+
+
+  votes.fo
