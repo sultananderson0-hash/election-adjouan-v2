@@ -3,1338 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Administration — Élection Président des Jeunes</title>
-
-  <link rel="stylesheet" href="style.css">
+  <title>Test Administration</title>
 </head>
 
 <body>
 
-<header class="topbar">
+  <h1>Test connexion administrateur</h1>
 
-  <div class="brand">
-    <span class="brand-mark">PJ</span>
-
-    <div>
-      <strong>Président des Jeunes</strong>
-      <small>Administration</small>
-    </div>
+  <div id="message" style="
+    padding:20px;
+    margin:20px;
+    background:#f1f1f1;
+    border-radius:10px;
+    font-size:18px;
+  ">
+    Chargement du test...
   </div>
 
-  <a class="btn btn-light" href="index.html">
-    ← Site public
-  </a>
+  <input
+    id="email"
+    type="email"
+    placeholder="E-mail"
+    style="padding:12px; display:block; margin:10px;"
+  >
+
+  <input
+    id="password"
+    type="password"
+    placeholder="Mot de passe"
+    style="padding:12px; display:block; margin:10px;"
+  >
+
+  <button
+    id="login"
+    style="padding:12px 20px; margin:10px;"
+  >
+    TESTER LA CONNEXION
+  </button>
 
-</header>
-
-
-<main class="container admin-page">
-
-  <!-- ==============================
-       CONNEXION ADMINISTRATEUR
-  =============================== -->
-
-  <section id="loginCard" class="card auth-card">
-
-    <h1>Connexion administrateur</h1>
-
-    <p class="muted">
-      Accès réservé à l'administration.
-    </p>
-
-    <form id="loginForm">
-
-      <label>
-        Adresse e-mail
-
-        <input
-          id="adminEmail"
-          type="email"
-          placeholder="Votre adresse e-mail"
-          required
-        >
-      </label>
-
-
-      <label>
-        Mot de passe
-
-        <input
-          id="adminPassword"
-          type="password"
-          placeholder="Votre mot de passe"
-          required
-        >
-      </label>
-
-
-      <button
-        id="loginButton"
-        class="btn btn-primary"
-        type="submit"
-      >
-        Se connecter
-      </button>
-
-
-      <p
-        id="loginMessage"
-        style="
-          margin-top:15px;
-          font-weight:600;
-        "
-      ></p>
-
-    </form>
-
-  </section>
-
-
-
-  <!-- ==============================
-       TABLEAU DE BORD
-  =============================== -->
-
-  <div id="dashboard" class="hidden">
-
-    <section class="page-title">
-
-      <div>
-
-        <p class="eyebrow">
-          TABLEAU DE BORD
-        </p>
-
-        <h1>
-          Gestion du scrutin
-        </h1>
-
-        <p
-          id="statusText"
-          class="muted"
-        ></p>
-
-      </div>
-
-
-      <button
-        id="logoutBtn"
-        class="btn btn-outline"
-      >
-        Déconnexion
-      </button>
-
-    </section>
-
-
-
-    <!-- STATISTIQUES -->
-
-    <div class="stats-grid">
-
-      <div class="stat-card">
-
-        <span>
-          Candidats
-        </span>
-
-        <strong id="candidateCount">
-          0
-        </strong>
-
-        <small>
-          / 5 maximum
-        </small>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <span>
-          Électeurs inscrits
-        </span>
-
-        <strong id="voterCount">
-          0
-        </strong>
-
-      </div>
-
-
-      <div class="stat-card">
-
-        <span>
-          Scrutin
-        </span>
-
-        <strong>
-          11/10/2026
-        </strong>
-
-        <small>
-          08:00 → 18:00
-        </small>
-
-      </div>
-
-    </div>
-
-
-
-    <!-- ==============================
-         CANDIDATS
-    =============================== -->
-
-    <section class="card">
-
-      <div class="section-heading">
-
-        <div>
-
-          <h2>
-            Candidats
-          </h2>
-
-          <p class="muted">
-            Maximum 5 candidats.
-          </p>
-
-        </div>
-
-
-        <button
-          id="addCandidateBtn"
-          class="btn btn-primary"
-        >
-          + Ajouter un candidat
-        </button>
-
-      </div>
-
-
-      <div
-        id="candidateLock"
-        class="notice notice-warning hidden"
-      >
-        🔒 À partir du 11 octobre 2026 à 08:00,
-        l'ajout, la modification et la suppression
-        des candidats sont désactivés.
-      </div>
-
-
-      <div
-        id="candidateAdminList"
-        class="admin-candidates"
-      ></div>
-
-    </section>
-
-
-
-    <!-- ==============================
-         ELECTEURS
-    =============================== -->
-
-    <section class="card">
-
-      <div class="section-heading">
-
-        <div>
-
-          <h2>
-            Électeurs inscrits
-          </h2>
-
-          <p class="muted">
-            Liste des personnes inscrites.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-
-            <tr>
-              <th>Nom & prénom</th>
-              <th>Date de naissance</th>
-              <th>Document</th>
-              <th>Date d'inscription</th>
-            </tr>
-
-          </thead>
-
-
-          <tbody id="votersTable"></tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ==============================
-         RESULTATS
-    =============================== -->
-
-    <section class="card">
-
-      <div class="section-heading">
-
-        <div>
-
-          <h2>
-            Résultats du vote
-          </h2>
-
-          <p class="muted">
-            Les résultats sont cachés pendant le scrutin.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="resultsLocked"
-        class="notice notice-info"
-      >
-        🔐 Les résultats seront accessibles
-        uniquement après la clôture automatique
-        à 18:00.
-      </div>
-
-
-      <div
-        id="resultsContent"
-        class="hidden"
-      >
-
-        <div
-          id="resultsList"
-          class="results-list"
-        ></div>
-
-
-        <div class="result-total">
-
-          <span>
-            Total des votes
-          </span>
-
-          <strong id="totalVotes">
-            0
-          </strong>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </div>
-
-</main>
-
-
-
-<!-- ==============================
-     MODALE CANDIDAT
-=============================== -->
-
-<div
-  id="candidateModal"
-  class="modal hidden"
->
-
-  <div class="modal-box">
-
-    <button
-      class="modal-close"
-      id="closeModal"
-      type="button"
-    >
-      ×
-    </button>
-
-
-    <h2 id="modalTitle">
-      Ajouter un candidat
-    </h2>
-
-
-    <form id="candidateForm">
-
-      <input
-        id="candidateId"
-        type="hidden"
-      >
-
-
-      <label>
-
-        Photo du candidat
-
-        <input
-          id="candidatePhoto"
-          type="file"
-          accept="image/*"
-        >
-
-      </label>
-
-
-      <div
-        id="photoPreview"
-        class="photo-preview"
-      ></div>
-
-
-      <label>
-
-        Nom et prénom
-
-        <input
-          id="candidateName"
-          type="text"
-          maxlength="150"
-          placeholder="Ex : Kouamé N'diamoi Theodore"
-          required
-        >
-
-      </label>
-
-
-      <label>
-
-        Profession
-
-        <input
-          id="candidateProfession"
-          type="text"
-          maxlength="100"
-          placeholder="Profession"
-          required
-        >
-
-      </label>
-
-
-      <label>
-
-        Programme / motivation
-
-        <textarea
-          id="candidateMotivation"
-          rows="6"
-          maxlength="2000"
-          placeholder="Programme et motivations du candidat"
-          required
-        ></textarea>
-
-      </label>
-
-
-      <div class="modal-actions">
-
-        <button
-          id="cancelModal"
-          type="button"
-          class="btn btn-outline"
-        >
-          Annuler
-        </button>
-
-
-        <button
-          type="submit"
-          class="btn btn-primary"
-        >
-          Enregistrer
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-
-</div>
-
-
-
-<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
 
-/* =====================================================
-   CONFIGURATION SUPABASE
-===================================================== */
+const message =
+  document.getElementById("message");
 
-const SUPABASE_URL =
-  "https://qktfqpsqmcrgtmauntfj.supabase.co";
 
+/* TEST 1 : JavaScript */
 
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwicmVmIjoicWt0ZnFwc3FtY3JndG1hdW50ZmoiLCJpYXQiOjE3OTA5NzU1MDEsImV4cCI6MjEwNjU1MTUwMSwiZXhwIjoyMTA2NTUxNTAxfQ.sugP-f143dYuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
+message.textContent =
+  "✅ JavaScript fonctionne. Vérification de Supabase...";
 
 
-const db =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+/* TEST 2 : bibliothèque Supabase */
 
+if (!window.supabase) {
 
+  message.textContent =
+    "❌ ERREUR : la bibliothèque Supabase ne se charge pas.";
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
+} else {
 
-const $ = id =>
-  document.getElementById(id);
+  message.textContent =
+    "✅ Supabase est chargé. Vérification de la connexion...";
 
-
-
-/* =====================================================
-   DATE DE VERROUILLAGE DES CANDIDATS
-
-   11 OCTOBRE 2026 À 08:00
-   CÔTE D'IVOIRE = UTC
-===================================================== */
-
-const CANDIDATE_CUTOFF =
-  new Date("2026-10-11T08:00:00Z");
-
-
-
-function candidatesLocked() {
-
-  return new Date() >= CANDIDATE_CUTOFF;
-
-}
-
-
-
-/* =====================================================
-   MESSAGE DE CONNEXION
-===================================================== */
-
-function loginMessage(message, success = false) {
-
-  $("loginMessage").textContent =
-    message;
-
-  $("loginMessage").style.color =
-    success
-      ? "green"
-      : "crimson";
-
-}
-
-
-
-/* =====================================================
-   CONNEXION ADMIN
-===================================================== */
-
-$("loginForm").addEventListener(
-  "submit",
-  async function(event) {
-
-    event.preventDefault();
-
-
-    loginMessage(
-      "Connexion en cours...",
-      true
-    );
-
-
-    $("loginButton").disabled =
-      true;
-
-
-    const email =
-      $("adminEmail")
-        .value
-        .trim();
-
-
-    const password =
-      $("adminPassword")
-        .value;
-
-
-    if (!email || !password) {
-
-      loginMessage(
-        "Veuillez remplir tous les champs."
-      );
-
-      $("loginButton").disabled =
-        false;
-
-      return;
-
-    }
-
-
-    try {
-
-      const response =
-        await db.auth.signInWithPassword({
-
-          email: email,
-
-          password: password
-
-        });
-
-
-      console.log(
-        "Réponse Supabase :",
-        response
-      );
-
-
-      if (response.error) {
-
-        loginMessage(
-          "Erreur : " +
-          response.error.message
-        );
-
-        $("loginButton").disabled =
-          false;
-
-        return;
-
-      }
-
-
-      if (
-        !response.data ||
-        !response.data.session
-      ) {
-
-        loginMessage(
-          "Connexion impossible : aucune session reçue."
-        );
-
-        $("loginButton").disabled =
-          false;
-
-        return;
-
-      }
-
-
-      loginMessage(
-        "Connexion réussie !",
-        true
-      );
-
-
-      $("loginCard")
-        .classList
-        .add("hidden");
-
-
-      $("dashboard")
-        .classList
-        .remove("hidden");
-
-
-      await refresh();
-
-
-      $("loginButton").disabled =
-        false;
-
-    }
-
-    catch(error) {
-
-      console.error(error);
-
-
-      loginMessage(
-        "Erreur inattendue : " +
-        error.message
-      );
-
-
-      $("loginButton").disabled =
-        false;
-
-    }
-
-  }
-);
-
-
-
-/* =====================================================
-   VERIFIER LA SESSION
-===================================================== */
-
-async function checkSession() {
 
   try {
 
-    const {
-      data,
-      error
-    } =
-      await db.auth.getSession();
+    const SUPABASE_URL =
+      "https://qktfqpsqmcrgtmauntfj.supabase.co";
 
 
-    if (error) {
-
-      console.error(error);
-
-      return;
-
-    }
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXAiLCJyZWYiOiJxa3RmcXBzcW1jcmd0bWF1bnRqIiwiaWF0IjoxNzkwOTc1NTAxLCJleHAiOjIxMDY1NTE1MDF9.sugP-f143dYuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
 
 
-    if (data.session) {
-
-      $("loginCard")
-        .classList
-        .add("hidden");
-
-
-      $("dashboard")
-        .classList
-        .remove("hidden");
+    const db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
 
 
-      await refresh();
+    message.textContent =
+      "✅ Supabase est prêt. Tu peux tester la connexion.";
 
-    }
+
+    document
+      .getElementById("login")
+      .addEventListener(
+        "click",
+        async function() {
+
+          message.textContent =
+            "⏳ Connexion en cours...";
+
+
+          const email =
+            document
+              .getElementById("email")
+              .value
+              .trim();
+
+
+          const password =
+            document
+              .getElementById("password")
+              .value;
+
+
+          if (!email || !password) {
+
+            message.textContent =
+              "❌ Entre l'e-mail et le mot de passe.";
+
+            return;
+
+          }
+
+
+          try {
+
+            const result =
+              await db.auth.signInWithPassword({
+
+                email: email,
+
+                password: password
+
+              });
+
+
+            if (result.error) {
+
+              message.textContent =
+                "❌ Supabase répond : " +
+                result.error.message;
+
+              return;
+
+            }
+
+
+            message.textContent =
+              "✅ CONNEXION RÉUSSIE !";
+
+          }
+
+          catch(error) {
+
+            message.textContent =
+              "❌ Erreur : " +
+              error.message;
+
+          }
+
+        }
+      );
 
   }
 
   catch(error) {
 
-    console.error(error);
+    message.textContent =
+      "❌ Erreur lors du démarrage de Supabase : " +
+      error.message;
 
   }
 
 }
 
+</script>
 
-checkSession();
-
-
-
-/* =====================================================
-   DECONNEXION
-===================================================== */
-
-$("logoutBtn").addEventListener(
-  "click",
-  async function() {
-
-    await db.auth.signOut();
-
-    location.reload();
-
-  }
-);
-
-
-
-/* =====================================================
-   CHARGER LES CANDIDATS
-===================================================== */
-
-async function loadCandidates() {
-
-  const response =
-    await db
-      .from("candidats")
-      .select(
-        "id,nom_prenom,photo_url,profession,programme,ambition,created_at"
-      )
-      .order(
-        "created_at",
-        {
-          ascending: true
-        }
-      );
-
-
-  if (response.error) {
-
-    console.error(
-      response.error
-    );
-
-
-    alert(
-      "Erreur lors du chargement des candidats : " +
-      response.error.message
-    );
-
-
-    return [];
-
-  }
-
-
-  return response.data || [];
-
-}
-
-
-
-/* =====================================================
-   AFFICHER LES CANDIDATS
-===================================================== */
-
-async function renderCandidates() {
-
-  const candidates =
-    await loadCandidates();
-
-
-  $("candidateCount")
-    .textContent =
-    candidates.length;
-
-
-  const locked =
-    candidatesLocked();
-
-
-  $("addCandidateBtn")
-    .disabled =
-    locked ||
-    candidates.length >= 5;
-
-
-  $("candidateLock")
-    .classList
-    .toggle(
-      "hidden",
-      !locked
-    );
-
-
-  if (!candidates.length) {
-
-    $("candidateAdminList")
-      .innerHTML =
-
-      `<div class="empty">
-        Aucun candidat enregistré.
-      </div>`;
-
-    return;
-
-  }
-
-
-  $("candidateAdminList")
-    .innerHTML =
-
-    candidates
-      .map(candidate => `
-
-        <article class="candidate-admin">
-
-          <img
-            src="${
-              escapeHtml(
-                candidate.photo_url ||
-                "https://via.placeholder.com/120x120?text=Photo"
-              )
-            }"
-            alt="Photo du candidat"
-          >
-
-
-          <div class="candidate-admin-info">
-
-            <h3>
-              ${
-                escapeHtml(
-                  candidate.nom_prenom
-                )
-              }
-            </h3>
-
-
-            <p>
-              <strong>
-                Profession :
-              </strong>
-
-              ${
-                escapeHtml(
-                  candidate.profession
-                )
-              }
-            </p>
-
-
-            <p>
-              ${
-                escapeHtml(
-                  candidate.programme || ""
-                )
-              }
-            </p>
-
-          </div>
-
-
-          <div class="candidate-actions">
-
-            <button
-              class="btn btn-small btn-outline"
-              onclick="editCandidate('${candidate.id}')"
-              ${
-                locked
-                  ? "disabled"
-                  : ""
-              }
-            >
-              Modifier
-            </button>
-
-
-            <button
-              class="btn btn-small btn-danger"
-              onclick="deleteCandidate('${candidate.id}')"
-              ${
-                locked
-                  ? "disabled"
-                  : ""
-              }
-            >
-              Supprimer
-            </button>
-
-          </div>
-
-        </article>
-
-      `)
-      .join("");
-
-}
-
-
-
-/* =====================================================
-   OUVRIR MODALE
-===================================================== */
-
-function openCandidateModal(
-  candidate = null
-) {
-
-  if (candidatesLocked()) {
-
-    alert(
-      "La gestion des candidats est maintenant verrouillée."
-    );
-
-    return;
-
-  }
-
-
-  $("candidateForm").reset();
-
-
-  $("candidateId").value =
-    candidate?.id || "";
-
-
-  $("modalTitle").textContent =
-    candidate
-      ? "Modifier le candidat"
-      : "Ajouter un candidat";
-
-
-  $("candidateName").value =
-    candidate?.nom_prenom || "";
-
-
-  $("candidateProfession").value =
-    candidate?.profession || "";
-
-
-  $("candidateMotivation").value =
-    candidate?.programme || "";
-
-
-  $("photoPreview").innerHTML =
-    candidate?.photo_url
-
-      ? `
-        <img
-          src="${escapeHtml(candidate.photo_url)}"
-          alt="Aperçu"
-        >
-      `
-
-      : "";
-
-
-  $("candidateModal")
-    .classList
-    .remove("hidden");
-
-}
-
-
-
-/* =====================================================
-   AJOUTER CANDIDAT
-===================================================== */
-
-$("addCandidateBtn")
-  .addEventListener(
-    "click",
-    async function() {
-
-      const candidates =
-        await loadCandidates();
-
-
-      if (candidates.length >= 5) {
-
-        alert(
-          "Maximum 5 candidats."
-        );
-
-        return;
-
-      }
-
-
-      openCandidateModal();
-
-    }
-  );
-
-
-
-/* =====================================================
-   FERMER MODALE
-===================================================== */
-
-$("closeModal").onclick =
-  function() {
-
-    $("candidateModal")
-      .classList
-      .add("hidden");
-
-  };
-
-
-$("cancelModal").onclick =
-  function() {
-
-    $("candidateModal")
-      .classList
-      .add("hidden");
-
-  };
-
-
-
-/* =====================================================
-   APERCU PHOTO
-===================================================== */
-
-$("candidatePhoto")
-  .addEventListener(
-    "change",
-    function(event) {
-
-      const file =
-        event.target.files[0];
-
-
-      if (!file) return;
-
-
-      if (
-        !file.type.startsWith("image/")
-      ) {
-
-        alert(
-          "Veuillez sélectionner une image."
-        );
-
-        event.target.value = "";
-
-        return;
-
-      }
-
-
-      if (
-        file.size >
-        5 * 1024 * 1024
-      ) {
-
-        alert(
-          "La photo ne doit pas dépasser 5 Mo."
-        );
-
-        event.target.value = "";
-
-        return;
-
-      }
-
-
-      const reader =
-        new FileReader();
-
-
-      reader.onload =
-        function() {
-
-          $("photoPreview")
-            .innerHTML =
-
-            `<img
-              src="${reader.result}"
-              alt="Aperçu"
-            >`;
-
-        };
-
-
-      reader.readAsDataURL(file);
-
-    }
-  );
-
-
-
-/* =====================================================
-   ENREGISTRER CANDIDAT
-===================================================== */
-
-$("candidateForm")
-  .addEventListener(
-    "submit",
-    async function(event) {
-
-      event.preventDefault();
-
-
-      if (candidatesLocked()) {
-
-        alert(
-          "Les candidats sont verrouillés."
-        );
-
-        return;
-
-      }
-
-
-      const id =
-        $("candidateId").value;
-
-
-      const name =
-        $("candidateName")
-          .value
-          .trim();
-
-
-      const profession =
-        $("candidateProfession")
-          .value
-          .trim();
-
-
-      const motivation =
-        $("candidateMotivation")
-          .value
-          .trim();
-
-
-      if (
-        !name ||
-        !profession ||
-        !motivation
-      ) {
-
-        alert(
-          "Veuillez remplir tous les champs."
-        );
-
-        return;
-
-      }
-
-
-      const candidates =
-        await loadCandidates();
-
-
-      if (
-        !id &&
-        candidates.length >= 5
-      ) {
-
-        alert(
-          "Maximum 5 candidats."
-        );
-
-        return;
-
-      }
-
-
-      const existing =
-        candidates.find(
-          c => c.id === id
-        );
-
-
-      let photoUrl =
-        existing?.photo_url ||
-        null;
-
-
-      /* PHOTO */
-
-      const file =
-        $("candidatePhoto")
-          .files[0];
-
-
-      if (file) {
-
-        const extension =
-          file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-
-        const path =
-          `${crypto.randomUUID()}.${extension}`;
-
-
-        const upload =
-          await db.storage
-            .from("candidats_photos")
-            .upload(
-              path,
-              file,
-              {
-                upsert: false,
-                contentType: file.type
-              }
-            );
-
-
-        if (upload.error) {
-
-          alert(
-            "Erreur photo : " +
-            upload.error.message
-          );
-
-          return;
-
-        }
-
-
-        const publicUrl =
-          db.storage
-            .from("candidats_photos")
-            .getPublicUrl(path);
-
-
-        photoUrl =
-          publicUrl
-            .data
-            .publicUrl;
-
-      }
-
-
-
-      /* MODIFICATION */
-
-      if (id) {
-
-        const result =
-          await db
-            .from("candidats")
-            .update({
-
-              nom_prenom:
-                name,
-
-              profession:
-                profession,
-
-              programme:
-                motivation,
-
-              photo_url:
-                photoUrl
-
-            })
-            .eq(
-              "id",
-              id
-            );
-
-
-        if (result.error) {
-
-          alert(
-            "Erreur modification : " +
-            result.error.message
-          );
-
-          return;
-
-        }
-
-
-        alert(
-          "Candidat modifié avec succès."
-        );
-
-      }
-
-
-
-      /* AJOUT */
-
-      else {
-
-        const result 
+</body>
+</html>
