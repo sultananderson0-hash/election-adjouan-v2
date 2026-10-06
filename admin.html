@@ -3,111 +3,507 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Administration</title>
+
+  <title>Administration — Président des Jeunes</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f7f5;
+      color: #17201d;
+    }
+
+    header {
+      background: #075e54;
+      color: white;
+      padding: 22px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+    }
+
+    .container {
+      width: 94%;
+      max-width: 1100px;
+      margin: 25px auto;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    }
+
+    h2 {
+      color: #075e54;
+    }
+
+    input,
+    textarea,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
+      background: #075e54;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: .9;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .logout {
+      background: #555;
+    }
+
+    .danger {
+      background: #c62828;
+    }
+
+    .edit {
+      background: #1565c0;
+    }
+
+    .status {
+      padding: 12px;
+      margin: 12px 0;
+      background: #eef5f3;
+      border-radius: 8px;
+    }
+
+    .success {
+      background: #e8f5e9;
+      color: #176b22;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #b71c1c;
+    }
+
+    .warning {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .candidate-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .candidate {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .candidate img {
+      width: 130px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 15px;
+    }
+
+    .candidate h3 {
+      text-align: center;
+      margin: 8px 0 15px;
+      color: #075e54;
+    }
+
+    .candidate p {
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .actions button {
+      flex: 1;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .stat {
+      padding: 20px;
+      text-align: center;
+      background: #eef5f3;
+      border-radius: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 30px;
+      color: #075e54;
+      margin-top: 8px;
+    }
+  </style>
 </head>
 
 <body>
 
-  <h1>Administration — Président des Jeunes</h1>
+<header>
+  <h1>Administration</h1>
+  <p>Élection du Président des Jeunes</p>
+</header>
 
-  <p id="status">⏳ Chargement...</p>
 
-  <input
-    type="email"
-    id="email"
-    placeholder="E-mail administrateur"
-  >
+<!-- ==============================
+     CONNEXION
+================================ -->
 
-  <br><br>
+<div id="loginSection" class="container">
 
-  <input
-    type="password"
-    id="password"
-    placeholder="Mot de passe"
-  >
+  <div class="card">
 
-  <br><br>
+    <h2>🔐 Connexion administrateur</h2>
 
-  <button id="loginBtn" type="button">
-    SE CONNECTER
-  </button>
+    <p id="status" class="status">
+      ⏳ Chargement...
+    </p>
 
-  <div id="dashboard" style="display:none;">
+    <input
+      type="email"
+      id="email"
+      placeholder="E-mail administrateur"
+    >
 
-    <hr>
+    <input
+      type="password"
+      id="password"
+      placeholder="Mot de passe"
+    >
+
+    <button id="loginBtn" type="button">
+      SE CONNECTER
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ==============================
+     TABLEAU DE BORD
+================================ -->
+
+<div id="dashboard" class="container hidden">
+
+  <div class="card">
 
     <h2>🎉 Tableau de bord administrateur</h2>
 
-    <p>✅ Connexion administrateur réussie.</p>
+    <p id="welcome">
+      ✅ Connexion réussie.
+    </p>
 
-    <button id="logoutBtn" type="button">
+    <button id="logoutBtn" class="logout" type="button">
       Se déconnecter
     </button>
 
   </div>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- STATISTIQUES -->
 
-  <script>
+  <div class="card">
 
-    const SUPABASE_URL =
-      "https://qktfqpsqmcrgtmauntfj.supabase.co";
+    <h2>📊 Vue générale</h2>
 
-    const SUPABASE_KEY =
-      "sb_publishable_45SBmGTiYtsCv5QEmYIovQ_WiAzSrCl";
+    <div class="stats">
 
-    const status =
-      document.getElementById("status");
+      <div class="stat">
+        Candidats
+        <strong id="candidateCount">0</strong>
+      </div>
 
-    const loginBtn =
-      document.getElementById("loginBtn");
+      <div class="stat">
+        Maximum
+        <strong>5</strong>
+      </div>
 
-    const dashboard =
-      document.getElementById("dashboard");
+    </div>
+
+  </div>
 
 
-    // Vérification de Supabase
+  <!-- ==============================
+       SCRUTIN
+  ================================= -->
 
-    if (!window.supabase) {
+  <div class="card">
+
+    <h2>🗳️ État du scrutin</h2>
+
+    <div id="electionStatus" class="status">
+      Chargement...
+    </div>
+
+  </div>
+
+
+  <!-- ==============================
+       GESTION CANDIDATS
+  ================================= -->
+
+  <div class="card">
+
+    <h2>👤 Gestion des candidats</h2>
+
+    <div id="candidateLock" class="status">
+      Vérification de l'état du scrutin...
+    </div>
+
+
+    <!-- FORMULAIRE -->
+
+    <div id="candidateForm">
+
+      <input
+        type="hidden"
+        id="candidateId"
+      >
+
+      <label>Nom et prénom</label>
+
+      <input
+        type="text"
+        id="candidateName"
+        placeholder="Exemple : EBOUO Nathanaël"
+      >
+
+
+      <label>Profession</label>
+
+      <input
+        type="text"
+        id="candidateProfession"
+        placeholder="Profession"
+      >
+
+
+      <label>Programme</label>
+
+      <textarea
+        id="candidateProgramme"
+        placeholder="Programme du candidat"
+      ></textarea>
+
+
+      <label>Motivation / ambitions</label>
+
+      <textarea
+        id="candidateAmbition"
+        placeholder="Motivation et ambitions"
+      ></textarea>
+
+
+      <label>Photo du candidat</label>
+
+      <input
+        type="file"
+        id="candidatePhoto"
+        accept="image/*"
+      >
+
+
+      <button
+        id="saveCandidateBtn"
+        type="button"
+      >
+        ➕ Ajouter le candidat
+      </button>
+
+
+      <button
+        id="cancelEditBtn"
+        class="logout hidden"
+        type="button"
+      >
+        Annuler la modification
+      </button>
+
+    </div>
+
+
+    <hr style="margin:30px 0;">
+
+
+    <h3>Candidats enregistrés</h3>
+
+    <div
+      id="candidateList"
+      class="candidate-list"
+    >
+      Chargement des candidats...
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /* ======================================
+     SUPABASE
+  ====================================== */
+
+  const SUPABASE_URL =
+    "https://qktfqpsqmcrgtmauntfj.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_45SBmGTiYtsCv5QEmYIovQ_WiAzSrCl";
+
+
+  const status =
+    document.getElementById("status");
+
+  const loginBtn =
+    document.getElementById("loginBtn");
+
+  const dashboard =
+    document.getElementById("dashboard");
+
+  const loginSection =
+    document.getElementById("loginSection");
+
+
+  let db = null;
+
+  let electionConfig = null;
+
+  let candidates = [];
+
+
+  /* ======================================
+     INITIALISATION SUPABASE
+  ====================================== */
+
+  if (!window.supabase) {
+
+    status.textContent =
+      "❌ Supabase ne s'est pas chargé.";
+
+    status.className =
+      "status error";
+
+  } else {
+
+    db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    status.textContent =
+      "✅ Supabase est prêt. Tu peux te connecter.";
+
+  }
+
+
+  /* ======================================
+     CONNEXION
+  ====================================== */
+
+  loginBtn.onclick =
+    async function() {
 
       status.textContent =
-        "❌ Supabase ne s'est pas chargé.";
+        "⏳ Connexion en cours...";
 
-    } else {
+      status.className =
+        "status";
 
-      const db =
-        window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_KEY
-        );
+      loginBtn.disabled = true;
 
 
-      status.textContent =
-        "✅ Supabase est prêt. Tu peux te connecter.";
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
 
 
-      // BOUTON CONNEXION
-
-      loginBtn.onclick = async function() {
+      if (!email || !password) {
 
         status.textContent =
-          "⏳ Connexion en cours...";
+          "⚠️ Entre ton e-mail et ton mot de passe.";
 
-        loginBtn.disabled = true;
+        status.className =
+          "status warning";
+
+        loginBtn.disabled = false;
+
+        return;
+      }
 
 
-        const email =
-          document.getElementById("email").value.trim();
+      try {
 
-        const password =
-          document.getElementById("password").value;
+        const result =
+          await db.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
 
 
-        if (!email || !password) {
+        if (result.error) {
 
           status.textContent =
-            "⚠️ Entre ton e-mail et ton mot de passe.";
+            "❌ " + result.error.message;
+
+          status.className =
+            "status error";
 
           loginBtn.disabled = false;
 
@@ -115,74 +511,723 @@
         }
 
 
-        try {
+        status.textContent =
+          "✅ Connexion réussie !";
 
-          const result =
-            await db.auth.signInWithPassword({
-              email: email,
-              password: password
-            });
+        status.className =
+          "status success";
 
 
-          if (result.error) {
+        loginSection.classList.add("hidden");
 
-            status.textContent =
-              "❌ " + result.error.message;
-
-            loginBtn.disabled = false;
-
-            return;
-          }
+        dashboard.classList.remove("hidden");
 
 
-          status.textContent =
-            "✅ Connexion réussie !";
+        await loadElectionConfig();
+
+        await loadCandidates();
+
+      }
+
+      catch (error) {
+
+        status.textContent =
+          "❌ Erreur : " + error.message;
+
+        status.className =
+          "status error";
+
+        loginBtn.disabled = false;
+
+        console.error(error);
+
+      }
+
+    };
 
 
-          dashboard.style.display =
-            "block";
+  /* ======================================
+     DECONNEXION
+  ====================================== */
+
+  document
+    .getElementById("logoutBtn")
+    .onclick =
+    async function() {
+
+      await db.auth.signOut();
+
+      location.reload();
+
+    };
 
 
-          loginBtn.style.display =
-            "none";
+  /* ======================================
+     CHARGER CONFIGURATION ELECTION
+  ====================================== */
+
+  async function loadElectionConfig() {
+
+    const result =
+      await db
+        .from("election_config")
+        .select("*")
+        .order("id", {
+          ascending: true
+        })
+        .limit(1)
+        .maybeSingle();
 
 
-          document.getElementById("email").style.display =
-            "none";
+    if (result.error) {
 
-          document.getElementById("password").style.display =
-            "none";
+      document
+        .getElementById("electionStatus")
+        .textContent =
+          "❌ Impossible de charger la configuration : " +
+          result.error.message;
+
+      return;
+
+    }
 
 
-        } catch (error) {
+    electionConfig =
+      result.data;
 
-          status.textContent =
-            "❌ Erreur : " + error.message;
 
-          loginBtn.disabled = false;
+    updateElectionStatus();
 
-          console.error(error);
+  }
+
+
+  /* ======================================
+     ETAT SCRUTIN
+  ====================================== */
+
+  function updateElectionStatus() {
+
+    const box =
+      document.getElementById("electionStatus");
+
+    if (!electionConfig) {
+
+      box.textContent =
+        "⚠️ Configuration du scrutin introuvable.";
+
+      box.className =
+        "status warning";
+
+      return;
+    }
+
+
+    const start =
+      new Date(electionConfig.date_debut);
+
+    const end =
+      new Date(electionConfig.date_fin);
+
+    const now =
+      new Date();
+
+
+    if (now < start) {
+
+      box.textContent =
+        "🕐 Scrutin fermé — ouverture le " +
+        formatDate(start);
+
+      box.className =
+        "status warning";
+
+    }
+
+    else if (now >= start && now < end) {
+
+      box.textContent =
+        "🟢 SCRUTIN OUVERT — fermeture le " +
+        formatDate(end);
+
+      box.className =
+        "status success";
+
+    }
+
+    else {
+
+      box.textContent =
+        "🔴 SCRUTIN CLÔTURÉ depuis le " +
+        formatDate(end);
+
+      box.className =
+        "status error";
+
+    }
+
+
+    updateCandidateLock();
+
+  }
+
+
+  /* ======================================
+     VERROUILLAGE CANDIDATS
+  ====================================== */
+
+  function candidateManagementLocked() {
+
+    if (!electionConfig) {
+
+      return true;
+
+    }
+
+    const start =
+      new Date(electionConfig.date_debut);
+
+    return new Date() >= start;
+
+  }
+
+
+  function updateCandidateLock() {
+
+    const box =
+      document.getElementById("candidateLock");
+
+    const form =
+      document.getElementById("candidateForm");
+
+
+    if (candidateManagementLocked()) {
+
+      box.textContent =
+        "🔒 La gestion des candidats est verrouillée : le scrutin a commencé.";
+
+      box.className =
+        "status warning";
+
+      form.style.display =
+        "none";
+
+    }
+
+    else {
+
+      box.textContent =
+        "🟢 Gestion des candidats ouverte jusqu'au début du scrutin.";
+
+      box.className =
+        "status success";
+
+      form.style.display =
+        "block";
+
+    }
+
+  }
+
+
+  /* ======================================
+     CHARGER CANDIDATS
+  ====================================== */
+
+  async function loadCandidates() {
+
+    const result =
+      await db
+        .from("candidats")
+        .select(
+          "id,nom_prenom,photo_url,profession,programme,ambition,created_at"
+        )
+        .order("created_at", {
+          ascending: true
+        });
+
+
+    if (result.error) {
+
+      document
+        .getElementById("candidateList")
+        .innerHTML =
+          `<p class="error status">
+            ❌ Impossible de charger les candidats :
+            ${escapeHtml(result.error.message)}
+          </p>`;
+
+      console.error(result.error);
+
+      return;
+
+    }
+
+
+    candidates =
+      result.data || [];
+
+
+    document
+      .getElementById("candidateCount")
+      .textContent =
+        candidates.length;
+
+
+    displayCandidates();
+
+  }
+
+
+  /* ======================================
+     AFFICHER CANDIDATS
+  ====================================== */
+
+  function displayCandidates() {
+
+    const list =
+      document.getElementById("candidateList");
+
+
+    if (candidates.length === 0) {
+
+      list.innerHTML =
+        "<p>Aucun candidat enregistré.</p>";
+
+      return;
+
+    }
+
+
+    list.innerHTML = "";
+
+
+    candidates.forEach(
+      function(candidate) {
+
+        const div =
+          document.createElement("div");
+
+        div.className =
+          "candidate";
+
+
+        const photo =
+          candidate.photo_url
+            ? `<img src="${candidate.photo_url}" alt="Photo">`
+            : `<div style="text-align:center;padding:50px 0;">
+                 📷<br>Pas de photo
+               </div>`;
+
+
+        div.innerHTML = `
+
+          ${photo}
+
+          <h3>
+            ${escapeHtml(candidate.nom_prenom || "")}
+          </h3>
+
+          <p>
+            <strong>Profession :</strong><br>
+            ${escapeHtml(candidate.profession || "Non renseignée")}
+          </p>
+
+          <p>
+            <strong>Programme :</strong><br>
+            ${escapeHtml(candidate.programme || "Non renseigné")}
+          </p>
+
+          <p>
+            <strong>Ambitions :</strong><br>
+            ${escapeHtml(candidate.ambition || "Non renseignées")}
+          </p>
+
+          <div class="actions">
+
+            <button
+              class="edit"
+              type="button"
+              onclick="editCandidate('${candidate.id}')"
+              ${candidateManagementLocked() ? "disabled" : ""}
+            >
+              ✏️ Modifier
+            </button>
+
+            <button
+              class="danger"
+              type="button"
+              onclick="deleteCandidate('${candidate.id}')"
+              ${candidateManagementLocked() ? "disabled" : ""}
+            >
+              🗑️ Supprimer
+            </button>
+
+          </div>
+
+        `;
+
+
+        list.appendChild(div);
+
+      }
+    );
+
+  }
+
+
+  /* ======================================
+     AJOUTER / MODIFIER
+  ====================================== */
+
+  document
+    .getElementById("saveCandidateBtn")
+    .onclick =
+    saveCandidate;
+
+
+  async function saveCandidate() {
+
+    if (candidateManagementLocked()) {
+
+      alert(
+        "🔒 La gestion des candidats est verrouillée."
+      );
+
+      return;
+
+    }
+
+
+    const id =
+      document
+        .getElementById("candidateId")
+        .value;
+
+
+    const name =
+      document
+        .getElementById("candidateName")
+        .value
+        .trim();
+
+
+    const profession =
+      document
+        .getElementById("candidateProfession")
+        .value
+        .trim();
+
+
+    const programme =
+      document
+        .getElementById("candidateProgramme")
+        .value
+        .trim();
+
+
+    const ambition =
+      document
+        .getElementById("candidateAmbition")
+        .value
+        .trim();
+
+
+    const photoInput =
+      document.getElementById("candidatePhoto");
+
+
+    if (!name) {
+
+      alert(
+        "⚠️ Veuillez entrer le nom et prénom du candidat."
+      );
+
+      return;
+
+    }
+
+
+    if (!id && candidates.length >= 5) {
+
+      alert(
+        "⚠️ Le maximum de 5 candidats est atteint."
+      );
+
+      return;
+
+    }
+
+
+    const button =
+      document
+        .getElementById("saveCandidateBtn");
+
+
+    button.disabled = true;
+
+    button.textContent =
+      "⏳ Enregistrement...";
+
+
+    try {
+
+      let photoUrl = null;
+
+
+      /* PHOTO EXISTANTE */
+
+      if (id) {
+
+        const oldCandidate =
+          candidates.find(
+            c => c.id === id
+          );
+
+        if (oldCandidate) {
+
+          photoUrl =
+            oldCandidate.photo_url || null;
 
         }
+
+      }
+
+
+      /* NOUVELLE PHOTO */
+
+      if (photoInput.files.length > 0) {
+
+        const file =
+          photoInput.files[0];
+
+
+        if (!file.type.startsWith("image/")) {
+
+          throw new Error(
+            "Le fichier doit être une image."
+          );
+
+        }
+
+
+        if (file.size > 5 * 1024 * 1024) {
+
+          throw new Error(
+            "La photo ne doit pas dépasser 5 Mo."
+          );
+
+        }
+
+
+        const extension =
+          file.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        const filePath =
+          crypto.randomUUID() +
+          "." +
+          extension;
+
+
+        const upload =
+          await db.storage
+            .from("candidats_photos")
+            .upload(
+              filePath,
+              file,
+              {
+                upsert: false
+              }
+            );
+
+
+        if (upload.error) {
+
+          throw upload.error;
+
+        }
+
+
+        const publicUrl =
+          db.storage
+            .from("candidats_photos")
+            .getPublicUrl(filePath);
+
+
+        photoUrl =
+          publicUrl.data.publicUrl;
+
+      }
+
+
+      const candidateData = {
+
+        nom_prenom:
+          name,
+
+        profession:
+          profession || null,
+
+        programme:
+          programme || null,
+
+        ambition:
+          ambition || null
 
       };
 
 
-      // DECONNEXION
+      if (photoUrl) {
 
-      document
-        .getElementById("logoutBtn")
-        .onclick = async function() {
+        candidateData.photo_url =
+          photoUrl;
 
-          await db.auth.signOut();
+      }
 
-          location.reload();
 
-        };
+      let result;
+
+
+      if (id) {
+
+        result =
+          await db
+            .from("candidats")
+            .update(candidateData)
+            .eq("id", id);
+
+      }
+
+      else {
+
+        result =
+          await db
+            .from("candidats")
+            .insert(candidateData);
+
+      }
+
+
+      if (result.error) {
+
+        throw result.error;
+
+      }
+
+
+      alert(
+        id
+          ? "✅ Candidat modifié avec succès."
+          : "✅ Candidat ajouté avec succès."
+      );
+
+
+      clearForm();
+
+      await loadCandidates();
 
     }
 
-  </script>
+    catch (error) {
 
-</body>
-</html>
+      console.error(error);
+
+      alert(
+        "❌ Erreur : " +
+        error.message
+      );
+
+    }
+
+    finally {
+
+      button.disabled = false;
+
+      button.textContent =
+        "➕ Ajouter le candidat";
+
+    }
+
+  }
+
+
+  /* ======================================
+     MODIFIER
+  ====================================== */
+
+  window.editCandidate =
+    function(id) {
+
+      if (candidateManagementLocked()) {
+
+        alert(
+          "🔒 La gestion des candidats est verrouillée."
+        );
+
+        return;
+
+      }
+
+
+      const candidate =
+        candidates.find(
+          c => c.id === id
+        );
+
+
+      if (!candidate) return;
+
+
+      document
+        .getElementById("candidateId")
+        .value =
+          candidate.id;
+
+
+      document
+        .getElementById("candidateName")
+        .value =
+          candidate.nom_prenom || "";
+
+
+      document
+        .getElementById("candidateProfession")
+        .value =
+          candidate.profession || "";
+
+
+      document
+        .getElementById("candidateProgramme")
+        .value =
+          candidate.programme || "";
+
+
+      document
+        .getElementById("candidateAmbition")
+        .value =
+          candidate.ambition || "";
+
+
+      document
+        .getElementById("candidatePhoto")
+        .value =
+          "";
+
+
+      document
+        .getElementById("saveCandidateBtn")
+        .textContent =
+          "💾 Enregistrer les modifications";
+
+
+      document
+        .getElementById("cancelEditBtn")
+        .classList
+        .remove("hidden");
+
+
+      window.scrollTo({
+        t
