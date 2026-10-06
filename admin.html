@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Connexion Administration</title>
+  <title>Administration - Élection Président des Jeunes</title>
 </head>
 
 <body>
 
-  <h1>Administration — Élection Président des Jeunes</h1>
+  <h1>Administration</h1>
 
-  <div id="status">Chargement de Supabase...</div>
-
-  <br>
+  <p id="status">⏳ Connexion à Supabase...</p>
 
   <input
     type="email"
     id="email"
-    placeholder="Adresse e-mail"
+    placeholder="E-mail administrateur"
   >
 
   <br><br>
@@ -39,70 +37,58 @@
     const SUPABASE_URL =
       "https://qktfqpsqmcrgtmauntfj.supabase.co";
 
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFrdGZxcHNxbWNyZ3RtYXVudGZqIiwiaWF0IjoxNzkwOTc1NTAxLCJleHAiOjIxMDY1NTE1MDF9.sugP-f143dYuyUzY8FHZqTS-YuuM3JcGX4tLz2N_kuI";
+    const SUPABASE_KEY =
+      "sb_publishable_45SBmGTiYtsCv5QEmYIovQ_WiAzSrCl";
 
     const status = document.getElementById("status");
     const loginBtn = document.getElementById("loginBtn");
 
-    if (!window.supabase) {
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    status.textContent =
+      "✅ Supabase est prêt. Tu peux tester la connexion.";
+
+    loginBtn.addEventListener("click", async () => {
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+      if (!email || !password) {
+        status.textContent =
+          "⚠️ Entre ton e-mail et ton mot de passe.";
+        return;
+      }
 
       status.textContent =
-        "❌ La bibliothèque Supabase ne se charge pas.";
+        "⏳ Connexion en cours...";
 
-    } else {
+      const { data, error } =
+        await db.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
 
-      const db = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      );
+      if (error) {
+
+        status.textContent =
+          "❌ " + error.message;
+
+        console.error(error);
+        return;
+      }
 
       status.textContent =
-        "✅ Supabase est prêt. Tu peux tester la connexion.";
+        "✅ Connexion réussie !";
 
-      loginBtn.addEventListener("click", async () => {
+      console.log("Utilisateur connecté :", data.user);
 
-        const email =
-          document.getElementById("email").value.trim();
-
-        const password =
-          document.getElementById("password").value;
-
-        if (!email || !password) {
-
-          status.textContent =
-            "⚠️ Entre ton e-mail et ton mot de passe.";
-
-          return;
-        }
-
-        status.textContent =
-          "⏳ Connexion en cours...";
-
-        const { data, error } =
-          await db.auth.signInWithPassword({
-            email: email,
-            password: password
-          });
-
-        if (error) {
-
-          status.textContent =
-            "❌ " + error.message;
-
-          console.error(error);
-
-          return;
-        }
-
-        status.textContent =
-          "✅ Connexion réussie !";
-
-        console.log("Utilisateur connecté :", data.user);
-
-      });
-
-    }
+    });
 
   </script>
 
